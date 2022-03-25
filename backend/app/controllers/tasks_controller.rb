@@ -5,18 +5,11 @@ class TasksController < ApplicationController
     end
 
     def create
-        @task = Task.new(name: params[:post][:name]) # パラメータをそのまま引数に入れることに抵抗感がある、バリデーションを通してから入れたい
+        @task = Task.new(name: params[:name]) # paramsをそのまま入れたくない
+        @task.save
 
-        if (@task.valid?) {
-            task.save
-            status = 200
-            json = { task: task }
-        }else{
-            status = 400 //リクエスト不正
-            json = { error: "タスク名が未入力です" }
-        }
-
-        render status: status, json: json
+        # todo:パラメータが不正な場合にエラーを返せるようにしたい
+        render status: 200, json: { status: "OK" }
     end
 
     def update

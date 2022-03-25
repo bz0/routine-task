@@ -1,24 +1,25 @@
-# README
+ README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
 
-Things you may want to cover:
+## 考えていたこと
 
-* Ruby version
+・まず動くものを作りたい
 
-* System dependencies
+・controller -> usecase -> domain -> repositoriesとレイヤ構造を作りたい
+　ちょっとしたAPIなのでやる必要性は現状ないが今後の拡張性を考えて仕組みを作っておきたい
 
-* Configuration
+　今後を踏まえての実装にすべきか、今必要な分実装するかの判断基準が難しいですが
+　
+　・レイヤごとに役割を分ける（controller、activerecordの肥大化を防ぎたい）
+　・実装をどこに書くか迷わないようにしたい（迷う場合は設計が間違っている可能性が高い）
 
-* Database creation
+　上記理由からアーキテクチャ導入して実装方針を決めたいと思いました。
 
-* Database initialization
+・Railsのコーディング規約はどうなっているか、静的コード解析を行えるツールはあるか？
 
-* How to run the test suite
+・moduleを利用するタイミングはライブラリ利用した場合等クラス名の競合が起きるかもしれないときの理解ですが
+　必要になったらの判断は自分でやる必要があるので怖さはあります。そこを解消する実装方法があるか調べたいです
+　(php(Laravelなどのフレームワーク)だと全てのファイルにnamespaceを割り当てる為競合が発生しづらい安心感がある）
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+・クラスのメソッドの引数や返り値に型は指定できるか？
+　想定外の値が入ってきたときに例外でキャッチして早めに返したい
