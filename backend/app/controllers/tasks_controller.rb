@@ -8,6 +8,12 @@ class TasksController < ApplicationController
         begin
             params.require(:name)
 
+            # 既に登録されているタスクかチェックする
+            task = Task.find_by(name: params[:name])
+            unless task.nil?
+                raise StandardError, "既に登録されているタスクです"
+            end
+
             task = Task.new
             task.name = params[:name]
             
@@ -22,7 +28,6 @@ class TasksController < ApplicationController
             http_code = 400
             json = {status:"NG", message: "リクエストが不正です"}
         rescue StandardError => e
-            p [:e, e]
             # DB登録に失敗した場合
             http_code = 500
             status = "NG"

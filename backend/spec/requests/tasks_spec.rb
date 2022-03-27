@@ -10,6 +10,19 @@ RSpec.describe TasksController, :type => :controller do
       end
     end
 
+    context "既に登録されている" do
+      before do
+        create(:task, name: 'test')
+      end
+
+      it "タスク登録" do
+        post :create, params: {"name"=>"test"}
+        expect(response).to have_http_status(500) # httpステータスが500かチェック
+        expect(response.body).to include 'NG'     # レスポンスに「OK」が入っているかチェック
+        expect(response.body).to include '既に登録されているタスクです' # レスポンスに「既に登録されているタスクです」が入っているかチェック
+      end
+    end
+
     context "異常" do
       it "nameの値が空" do
         post :create, params: {"name" => ""}
