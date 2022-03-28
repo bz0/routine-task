@@ -1,72 +1,85 @@
 require 'rails_helper'
 
+# describeには、テストの対象が何かを記述する。
+# contextには、特定の条件が何かを記述する。
+# exampleとitには、アウトプットが何かを記述する。日本語で記述するときはexample
+# https://qiita.com/uchiko/items/d34c5d1298934252f58f
+
 RSpec.describe TasksController, :type => :controller do
   describe "POST /task 登録処理" do
-    context "正常" do
-      it "タスク登録" do
+    context "nameパラメータに値をセット" do
+      example "タスクを1件登録" do
         post :create, params: {"name"=>"test"}
-        expect(response).to have_http_status(200) # httpステータスが200かチェック
-        expect(response.body).to include 'OK'     # レスポンスに「OK」が入っているかチェック
+        expect(response).to have_http_status(200)
+        expect(response.body).to include 'OK'
       end
     end
 
-    context "既に登録されている" do
+    context "既にタスクが存在する" do
       before do
         create(:task, name: 'test')
       end
 
-      it "タスク登録" do
+      example "タスク登録せずにエラー情報を返す" do
         post :create, params: {"name"=>"test"}
-        expect(response).to have_http_status(500) # httpステータスが500かチェック
-        expect(response.body).to include 'NG'     # レスポンスに「OK」が入っているかチェック
-        expect(response.body).to include '既に登録されているタスクです' # レスポンスに「既に登録されているタスクです」が入っているかチェック
+        expect(response).to have_http_status(500)
+        expect(response.body).to include 'NG'
+        expect(response.body).to include '既に登録されているタスクです'
       end
     end
 
-    context "異常" do
-      it "nameの値が空" do
+    context "nameパラメータの値が空" do
+      example "タスク登録せずにエラー情報を返す" do
         post :create, params: {"name" => ""}
-        expect(response).to have_http_status(400) # httpステータスが400かチェック
-        expect(response.body).to include 'NG'     # レスポンスに「NG」が入っているかチェック
+        expect(response).to have_http_status(400)
+        expect(response.body).to include 'NG'
       end
+    end
 
-      it "nameなし" do
+    context "nameパラメータがない" do
+      example "タスク登録せずにエラー情報を返す" do
         post :create, params: {}
-        expect(response).to have_http_status(400) # httpステータスが400かチェック
-        expect(response.body).to include 'NG'     # レスポンスに「NG」が入っているかチェック
+        expect(response).to have_http_status(400)
+        expect(response.body).to include 'NG'
       end
     end
   end
 
   describe "GET /task 全件取得" do
-    context "正常" do
+    context "5件データが存在する" do
       before do
         create_list(:task, 5)
       end
 
-      it "5件取得" do
+      example "5件分のタスク情報を返す" do
         get :index
-        expect(response).to have_http_status(200) # httpステータスが200かチェック
+        expect(response).to have_http_status(200)
         json = JSON.parse(response.body, { :symbolize_names => true })
         tasks = json[:tasks]
 
-        expect(json[:count]).to eq 5 # 件数が5かチェック
-        expect(tasks.length).to eq 5 # タスクが5件分入っているかチェック
-        expect(response.body).to include 'OK' # レスポンスに「OK」が入っているかチェック
+        expect(json[:count]).to eq 5
+        expect(tasks.length).to eq 5
+        expect(response.body).to include 'OK'
       end
     end
 
-    context "データなし" do
-      it "0件取得" do
+    context "データが存在しない" do
+      example "0件取得" do
         get :index
-        expect(response).to have_http_status(200) # httpステータスが200かチェック
+        expect(response).to have_http_status(200)
         json = JSON.parse(response.body, { :symbolize_names => true })
         tasks = json[:tasks]
 
-        expect(json[:count]).to eq 0 # 0件かチェック
-        expect(tasks.length).to eq 0 # タスクが0件分入っているかチェック
-        expect(response.body).to include 'OK' # レスポンスに「OK」が入っているかチェック
+        expect(json[:count]).to eq 0
+        expect(tasks.length).to eq 0
+        expect(response.body).to include 'OK'
       end
+    end
+  end
+
+  describe "POST /task 更新処理" do
+    context "正常" do
+
     end
   end
 
