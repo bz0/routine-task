@@ -15,7 +15,7 @@ RSpec.describe TasksController, :type => :controller do
       end
     end
 
-    context "既にタスクが存在する" do
+    context "既に同じタスク名が存在する" do
       before do
         create(:task, name: 'test')
       end
@@ -23,16 +23,21 @@ RSpec.describe TasksController, :type => :controller do
       example "タスク登録せずにエラー情報を返す" do
         post :create, params: {"name"=>"test"}
         expect(response).to have_http_status(500)
-        expect(response.body).to include 'NG'
-        expect(response.body).to include '既に登録されているタスクです'
+      
+        json = JSON.parse(response.body, { :symbolize_names => true })
+        expect(json[:status]).to eq 'NG'
+        expect(json[:message]).to eq TasksController::ALREADY_REGISTERED_TASK_MESSAGE
       end
     end
 
     context "nameパラメータの値が空" do
-      example "タスク登録せずにエラー情報を返す" do
+      example "タスク登録せずにメッセージを返す" do
         post :create, params: {"name" => ""}
         expect(response).to have_http_status(400)
         expect(response.body).to include 'NG'
+
+        json = JSON.parse(response.body, { :symbolize_names => true })
+        expect(json[:message]).to eq TasksController::BAD_REQUEST_MESSAGE
       end
     end
 
@@ -41,6 +46,9 @@ RSpec.describe TasksController, :type => :controller do
         post :create, params: {}
         expect(response).to have_http_status(400)
         expect(response.body).to include 'NG'
+
+        json = JSON.parse(response.body, { :symbolize_names => true })
+        expect(json[:message]).to eq TasksController::BAD_REQUEST_MESSAGE
       end
     end
   end
@@ -55,31 +63,58 @@ RSpec.describe TasksController, :type => :controller do
         get :index
         expect(response).to have_http_status(200)
         json = JSON.parse(response.body, { :symbolize_names => true })
-        tasks = json[:tasks]
+        data = json[:data]
 
         expect(json[:count]).to eq 5
-        expect(tasks.length).to eq 5
+        expect(data.length).to eq 5
         expect(response.body).to include 'OK'
       end
     end
 
     context "データが存在しない" do
-      example "0件取得" do
+      example "0件分のタスク情報を返す" do
         get :index
         expect(response).to have_http_status(200)
         json = JSON.parse(response.body, { :symbolize_names => true })
-        tasks = json[:tasks]
+        data = json[:data]
 
         expect(json[:count]).to eq 0
-        expect(tasks.length).to eq 0
+        expect(data.length).to eq 0
         expect(response.body).to include 'OK'
+
       end
     end
   end
 
-  describe "POST /task 更新処理" do
-    context "正常" do
+  # 同じものを使いまわしする為定数指定
+  BEFORE_UPDATE_TASK_NAME = '皿洗いする' # 更新前のタスク名
+  AFTER_UPDATE_TASK_NAME = '掃除する'    # 更新後のタスク名
 
+  describe "POST /task 更新処理" do
+    context "更新対象のタスクが存在する" do
+      before do
+        create(:task, name: BEFORE_UPDATE_TASK_NAME)
+      end
+
+      example "タスク名が「掃除する」に更新される" do
+        task = Task.find_by(name: BEFORE_UPDATE_TASK_NAME)
+        post :update, params: {"id" => task[:id], "name" => AFTER_UPDATE_TASK_NAME}
+        expect(response).to have_http_status(200)
+
+        json = JSON.parse(response.body, { :symbolize_names => true })
+        after_name = json[:data][:name]
+        expect(after_name).to eq AFTER_UPDATE_TASK_NAME
+      end
+    end
+
+    context "更新対象のタスクが存在しない" do
+      example "更新されずエラー情報が返る" do
+        post :update, params: {"id" => 100, "name" => AFTER_UPDATE_TASK_NAME}
+        expect(response).to have_http_status(500)
+
+        json = JSON.parse(response.body, { :symbolize_names => true })
+        expect(json[:message]).to eq TasksController::UPDATE_TASK_EXIST_MESSAGE
+      end
     end
   end
 
@@ -89,7 +124,7 @@ RSpec.describe TasksController, :type => :controller do
   describe "POST /task/create [異常系]" do
     context 'DB登録失敗' do
       before do
-        c = TasksController.new
+        c = dataController.new
         allow(c).to receive(:create).and_raise(ActiveRecord::RecordNotSaved, "error")
       end
 

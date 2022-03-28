@@ -9,7 +9,16 @@ DB作成・docker環境構築・立ち上げを行います。
 $ cd backend && make build
 ```
 
+## テスト実行
+
+```
+$ docker-compose run backend rspec spec
+```
+
 ## 考えていたこと
+
+・Dockerをバックエンドとは別ディレクトリにしたかったが
+　gemのmysql2がないといったエラーが起き解消できなかった為現在のディレクトリ構成になってます
 
 ・まず動くものを作りたい
 
