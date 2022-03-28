@@ -1,6 +1,4 @@
 class TasksController < ApplicationController
-    # 複数箇所の修正を１回で済ます為定数にする
-    # 定数はコントローラでなく別の場所に置くべきか？
     STATUS_SUCCESS = "OK"
     STATUS_ERROR   = "NG"
     
@@ -54,14 +52,12 @@ class TasksController < ApplicationController
             params.require(:name)
             task = Task.find_by(id: params[:id])
 
-            if task.nil? # レコードが存在するかチェックする。idが存在しないことはあり得ない為500とする
+            if task.nil? # レコードが存在するかチェックする
                 raise StandardError, UPDATE_TASK_EXIST_MESSAGE
             end
 
             task.name = params[:name]
             
-            # シンプルな条件式なのでunlessで問題ないか
-            # https://techracho.bpsinc.jp/hachi8833/2016_08_23/25010
             unless task.save!
                 raise StandardError, FAILED_UPDATE_TASK_MESSAGE
             end
