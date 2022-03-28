@@ -73,6 +73,7 @@ GEM
       database_cleaner-core (~> 2.0.0)
     database_cleaner-core (2.0.1)
     diff-lcs (1.5.0)
+    dotenv (2.7.6)
     erubi (1.10.0)
     factory_bot (6.2.1)
       activesupport (>= 5.0.0)
@@ -156,6 +157,7 @@ GEM
       rspec-mocks (~> 3.10)
       rspec-support (~> 3.10)
     rspec-support (3.11.0)
+    slack-notifier (2.4.0)
     spring (4.0.0)
     spring-commands-rspec (1.0.4)
       spring (>= 0.9.1)
@@ -181,6 +183,7 @@ DEPENDENCIES
   bootsnap (>= 1.4.4)
   byebug
   database_cleaner
+  dotenv
   factory_bot_rails (~> 6.2)
   listen (~> 3.3)
   mysql2 (~> 0.5)
@@ -188,6 +191,7 @@ DEPENDENCIES
   rails (~> 6.1.5)
   rspec-queue
   rspec-rails (~> 5.0.0)
+  slack-notifier
   spring
   spring-commands-rspec
   tzinfo-data
