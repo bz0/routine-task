@@ -12,6 +12,23 @@ $ cd backend && make build
 - バックエンド：http://localhost:3000
 - フロントエンド：http://localhost:3001
 
+## slackのincoming
+
+Incoming Webhook インテグレーションの追加を行います。  
+下記リンクに飛び、通知したいチャンネルを選択して下さい。  
+https://slack.com/services/new/incoming-webhook
+
+出てきたWebhookURL(https://hooks.slack.com/services/xxxxx/xxxxx)を.envに設定して下さい
+
+```
+$ cp .env.sample .env
+```
+
+.env
+```.env
+SLACK_WEB_HOOK_URL='WebhookURL'
+```
+
 ## テスト実行
 
 ```
