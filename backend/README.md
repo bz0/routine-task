@@ -2,17 +2,28 @@
 
 ## ローカル環境構築手順
 
-ルートディレクトリから実行して下さい。
-DB作成・docker環境構築・立ち上げを行います。
+ルートディレクトリから実行して下さい。  
+DB作成・docker環境構築・railsサーバ立ち上げを行います。  
 
 ```
 $ cd backend && make build
 ```
 
+- バックエンド：http://localhost:3000
+- フロントエンド：http://localhost:3001
+
 ## テスト実行
 
 ```
 $ docker-compose run backend rspec spec
+```
+
+## gem追加時の流れ
+
+gemを追加する場合、Gemfileに記載の後下記を実行して下さい。
+
+```
+$ docker-compose down && docker-compose build --no-cache
 ```
 
 ## 考えていたこと
