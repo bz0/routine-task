@@ -1,5 +1,6 @@
 class TasksController < ApplicationController
     # 複数箇所の修正を１回で済ます為定数にする
+    # 定数はコントローラでなく別の場所に置くべきか？
     STATUS_SUCCESS = "OK"
     STATUS_ERROR   = "NG"
     
@@ -10,7 +11,7 @@ class TasksController < ApplicationController
     ALREADY_REGISTERED_TASK_MESSAGE = "既に登録されているタスクです"
 
     def index
-        tasks = Task.all # todo:全件取得しているがページネーションにしたい
+        tasks = Task.all # todo:全件取得しているが後でページネーションにしたい
         render status: 200, json: { status: STATUS_SUCCESS, count: tasks.count, data: tasks }
     end
 
