@@ -5,11 +5,15 @@ require 'rails_helper'
 # exampleとitには、アウトプットが何かを記述する。日本語で記述するときはexample
 # https://qiita.com/uchiko/items/d34c5d1298934252f58f
 
-RSpec.describe TasksController, :type => :controller do
+RSpec.describe "Tasks", type: :request do
+  let :headers do
+    { Authorization: "Bearer #{ENV['API_TOKEN']}" }
+  end
+
   describe "POST /task 登録処理" do
     context "nameパラメータに値をセット" do
       example "タスクを1件登録" do
-        post :create, params: {"name"=>"test"}
+        post tasks_path, params: {"name"=>"test"}, headers: headers
         expect(response).to have_http_status(200)
         expect(response.body).to include 'OK'
       end
@@ -21,7 +25,7 @@ RSpec.describe TasksController, :type => :controller do
       end
 
       example "タスク登録せずにエラー情報を返す" do
-        post :create, params: {"name"=>"test"}
+        post tasks_path, params: {"name"=>"test"}, headers: headers
         expect(response).to have_http_status(500)
       
         json = JSON.parse(response.body, { :symbolize_names => true })
@@ -32,7 +36,7 @@ RSpec.describe TasksController, :type => :controller do
 
     context "nameパラメータの値が空" do
       example "タスク登録せずにメッセージを返す" do
-        post :create, params: {"name" => ""}
+        post tasks_path, params: {"name" => ""}, headers: headers
         expect(response).to have_http_status(400)
         expect(response.body).to include 'NG'
 
@@ -43,7 +47,7 @@ RSpec.describe TasksController, :type => :controller do
 
     context "nameパラメータがない" do
       example "タスク登録せずにエラー情報を返す" do
-        post :create, params: {}
+        post tasks_path, params: {}, headers: headers
         expect(response).to have_http_status(400)
         expect(response.body).to include 'NG'
 
@@ -60,7 +64,7 @@ RSpec.describe TasksController, :type => :controller do
       end
 
       example "5件分のタスク情報を返す" do
-        get :index
+        get tasks_path,params: {},headers: headers
         expect(response).to have_http_status(200)
         json = JSON.parse(response.body, { :symbolize_names => true })
         data = json[:data]
@@ -73,7 +77,7 @@ RSpec.describe TasksController, :type => :controller do
 
     context "データが存在しない" do
       example "0件分のタスク情報を返す" do
-        get :index
+        get tasks_path,params: {},headers: headers
         expect(response).to have_http_status(200)
         json = JSON.parse(response.body, { :symbolize_names => true })
         data = json[:data]
@@ -90,7 +94,7 @@ RSpec.describe TasksController, :type => :controller do
   BEFORE_UPDATE_TASK_NAME = '皿洗いする' # 更新前のタスク名
   AFTER_UPDATE_TASK_NAME = '掃除する'    # 更新後のタスク名
 
-  describe "POST /task 更新処理" do
+  describe "PATCH /task 更新処理" do
     context "更新対象のタスクが存在する" do
       before do
         create(:task, name: BEFORE_UPDATE_TASK_NAME)
@@ -98,7 +102,7 @@ RSpec.describe TasksController, :type => :controller do
 
       example "タスク名が「掃除する」に更新される" do
         task = Task.find_by(name: BEFORE_UPDATE_TASK_NAME)
-        post :update, params: {"id" => task[:id], "name" => AFTER_UPDATE_TASK_NAME}
+        patch task_path(task), params: {id: task[:id], name: AFTER_UPDATE_TASK_NAME}, headers: headers
         expect(response).to have_http_status(200)
 
         json = JSON.parse(response.body, { :symbolize_names => true })
@@ -109,7 +113,7 @@ RSpec.describe TasksController, :type => :controller do
 
     context "更新対象のタスクが存在しない" do
       example "更新されずエラー情報が返る" do
-        post :update, params: {"id" => 100, "name" => AFTER_UPDATE_TASK_NAME}
+        patch task_path(100), params: {id: 100, name: AFTER_UPDATE_TASK_NAME}, headers: headers
         expect(response).to have_http_status(500)
 
         json = JSON.parse(response.body, { :symbolize_names => true })
