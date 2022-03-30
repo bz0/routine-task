@@ -8,6 +8,7 @@ import {
   Input,Button,ListItem,
   Spacer
 } from '@chakra-ui/react';
+import moment from 'moment'
 
 export const Home = () => {
     const [tasks, setTask] = useState({})
@@ -70,10 +71,11 @@ export const Home = () => {
                     <Box ml='5' my='auto'>{task.name}</Box>  
                   </Flex>
                   <Spacer />
-                  <Box>
+                  <Box my='auto'>{moment(task.updated_at).format('YYYY-MM-DD')}</Box>
+                  <Box ml='5' my='auto'>
                     <Button size='xs'>編集</Button>
                   </Box>
-                  <Box>
+                  <Box my='auto'>
                     <Button size='xs' ml='5' colorScheme='pink'>削除</Button>
                   </Box>
                 </Flex>
