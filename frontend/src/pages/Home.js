@@ -71,7 +71,7 @@ export const Home = () => {
                     <Box ml='5' my='auto'>{task.name}</Box>  
                   </Flex>
                   <Spacer />
-                  <Box my='auto'>{moment(task.updated_at).format('YYYY-MM-DD')}</Box>
+                  <Box my='auto' color='gray.400'>{moment(task.updated_at).format('YYYY-MM-DD')}</Box>
                   <Box ml='5' my='auto'>
                     <Button size='xs'>編集</Button>
                   </Box>
