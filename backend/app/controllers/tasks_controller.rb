@@ -9,7 +9,7 @@ class TasksController < ApplicationController
     ALREADY_REGISTERED_TASK_MESSAGE = "既に登録されているタスクです"
 
     def index
-        tasks = Task.all # todo:全件取得しているが後でページネーションにしたい
+        tasks = Task.all.order(updated_at: "DESC") # todo:全件取得しているが後でページネーションにしたい
         render status: 200, json: { status: STATUS_SUCCESS, count: tasks.count, data: tasks }
     end
 
