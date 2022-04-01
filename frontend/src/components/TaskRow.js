@@ -33,25 +33,25 @@ export const TaskRow = (props) => {
         setIsEdit(false)
     }
 
-    const refSave = (e) => {
+    const taskRefSave = (e) => {
         taskRef.current = e.target.value
     }
 
-    const Edit = (props) => {
+    const Edit = () => {
         return (
             <>
-                <Input defaultValue={props.task.name} onChange={refSave} />
+                <Input defaultValue={taskRef.current} onChange={taskRefSave} />
                 <Button variant="solid" size="xs" ml={5} onClick={handleSave}>保存</Button>
                 <Button variant="solid" size="xs" ml={5} onClick={handleShow}>キャンセル</Button>
             </>
         )
     }
 
-    const Show = (props) => {
+    const Show = () => {
         return (
             <>
                 <Box my='auto'><BiTask /></Box>
-                <Box ml='5' my='auto'>{props.task.name}</Box>
+                <Box ml='5' my='auto'>{taskRef.current}</Box>
             </>
         )
     }
