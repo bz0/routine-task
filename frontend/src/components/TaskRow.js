@@ -57,7 +57,6 @@ export const TaskRow = (props) => {
     }
 
     taskRef.current = props.task.name
-    console.log("taskRef:", taskRef.current, "props.task.name:", props.task.name)
 
     return (
         <>
