@@ -34,3 +34,15 @@ export const updateTask = async (id, name) => {
       }
   });
 }
+
+export const destroyTask = async (id) => {
+  const deleteUrl = url + '/' + id
+  console.log("deleteUrl:", deleteUrl, "id:", id)
+
+  await fetch(deleteUrl,{
+      method: 'DELETE',
+      headers: {
+        Authorization: bearerToken
+      }
+  });
+}

@@ -10,12 +10,14 @@ import {
 import { BiTask } from 'react-icons/bi';
 import { updateTask } from '../models/task'
 import moment from 'moment'
+import { destroyTask } from '../models/task'
 
 export const TaskRow = (props) => {
     const [isEdit, setIsEdit] = useState(false)
+    const [display, setDisplay] = useState(true)
     const taskRef = useRef('')
 
-    useEffect(() => {}, [isEdit])
+    useEffect(() => {}, [isEdit, display])
 
     //編集エリアを表示
     const handleIsEdit = () => {
@@ -31,6 +33,13 @@ export const TaskRow = (props) => {
     const handleSave = () => {
         updateTask(props.task.id, taskRef.current)
         setIsEdit(false)
+    }
+
+    const handleDestroy = async () => {
+        if (window.confirm("削除してよいですか？")){
+            await destroyTask(props.task.id)
+            setDisplay(false)
+        }
     }
 
     const taskRefSave = (e) => {
@@ -60,7 +69,7 @@ export const TaskRow = (props) => {
 
     return (
         <>
-            <ListItem border="1px solid #eee" mt={props.index>0 ? 5 : 0} px={8} py={3} display="block">
+            <ListItem border="1px solid #eee" mt={props.index>0 ? 5 : 0} px={8} py={3} display={display ? 'block':'none'}>
                 <Flex>
                     <Flex w='70%'>
                         {isEdit ? <Edit task={props.task} /> : <Show task={props.task} /> }
@@ -73,7 +82,7 @@ export const TaskRow = (props) => {
                     </Box>
 
                     <Box my='auto'>
-                        <Button size='xs' ml='5' colorScheme='pink'>削除</Button>
+                        <Button size='xs' ml='5' colorScheme='pink' onClick={handleDestroy}>削除</Button>
                     </Box>
                 </Flex>
             </ListItem>
