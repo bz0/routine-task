@@ -19,20 +19,16 @@ export const TaskRow = (props) => {
 
     //編集エリアを表示
     const handleIsEdit = () => {
-        taskRef.current = props.task.name
-        console.log("handleIsEdit taskRef:", taskRef.current)
         setIsEdit(true)
     }
 
     //タスク情報の表示
     const handleShow = () => {
-        console.log("handleShow taskRef:", taskRef.current)
         setIsEdit(false)
     }
 
     //編集したタスク名の保存
     const handleSave = () => {
-        console.log("handleSave taskRef:", taskRef.current)
         updateTask(props.task.id, taskRef.current)
         setIsEdit(false)
     }
