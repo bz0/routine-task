@@ -40,9 +40,9 @@ export const TaskRow = (props) => {
     const Edit = () => {
         return (
             <>
-                <Input defaultValue={taskRef.current} onChange={taskRefSave} />
-                <Button variant="solid" size="xs" ml={5} onClick={handleSave}>保存</Button>
-                <Button variant="solid" size="xs" ml={5} onClick={handleShow}>キャンセル</Button>
+                <Input defaultValue={taskRef.current} size="xs" onChange={taskRefSave} />
+                <Button variant="solid" size="xs" ml={5} px={3} onClick={handleSave}>保存</Button>
+                <Button variant="solid" size="xs" ml={5} px={5} onClick={handleShow}>キャンセル</Button>
             </>
         )
     }
@@ -60,7 +60,7 @@ export const TaskRow = (props) => {
         <>
             <ListItem border="1px solid #eee" mt={props.index>0 ? 5 : 0} px={8} py={3} display="block">
                 <Flex>
-                    <Flex w='60%'>
+                    <Flex w='70%'>
                         {isEdit ? <Edit task={props.task} /> : <Show task={props.task} /> }
                     </Flex>
                     <Spacer />
