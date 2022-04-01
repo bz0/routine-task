@@ -13,7 +13,7 @@ import moment from 'moment'
 
 export const TaskRow = (props) => {
     const [isEdit, setIsEdit] = useState(false)
-    const taskRef = useRef(props.task.name)
+    const taskRef = useRef('')
 
     useEffect(() => {}, [isEdit])
 
@@ -55,6 +55,9 @@ export const TaskRow = (props) => {
             </>
         )
     }
+
+    taskRef.current = props.task.name
+    console.log("taskRef:", taskRef.current, "props.task.name:", props.task.name)
 
     return (
         <>
