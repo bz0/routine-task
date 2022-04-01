@@ -15,7 +15,7 @@ function App() {
           <Heading size="sm">習慣化タスクリマインダー</Heading>
         </Flex>
 
-        <Box width="50%" m="auto" minHeight="100%">
+        <Box width="50%" m="auto" pb={10} minHeight="100%">
           <Home />
         </Box>
     </ChakraProvider>
