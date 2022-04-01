@@ -24,8 +24,8 @@ export const createTask = async (name) => {
 }
 
 export const updateTask = async (id, name) => {
-  console.log("id+name:", id, name)
-  await fetch(url,{
+  const patchUrl = url + '/' + id
+  await fetch(patchUrl,{
       method: 'PATCH',
       body : JSON.stringify({id: id, name: name}),
       headers: {
