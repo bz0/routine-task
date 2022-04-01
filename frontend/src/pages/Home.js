@@ -11,25 +11,25 @@ import { getTaskList, createTask } from '../models/task'
 
 export const Home = () => {
     const [tasks, setTask] = useState({})
-    const taskRef = useRef(null)
+    const addTaskRef = useRef(null)
 
     useEffect(() => {
       getList()
     }, [])
 
     const getList = async () => {
-      // countに応じてアクセスするAPIを変えなければならない
       const body = await getTaskList()
+      console.log("body:", body)
       setTask(body.data)
     };
 
     const create = async (e) => {
-        if (!taskRef.current.value) {
+        if (!addTaskRef.current.value) {
             alert("タスク名が未入力です")
             return ;
         }
 
-        await createTask(taskRef.current.value)
+        await createTask(addTaskRef.current.value)
         getList()
     }
 
@@ -38,7 +38,7 @@ export const Home = () => {
           <FormControl mt={5}>
             <FormLabel fontWeight="bold">タスクを追加する</FormLabel>
             <Flex>
-              <Input ref={taskRef} />
+              <Input ref={addTaskRef} />
               <Button variant="solid" size="md" ml={5} onClick={create}>
                 追加
               </Button>
