@@ -42,7 +42,7 @@ module Myapp
           origins "*"
           resource "*",
           headers: :any,
-          methods: [:get, :post, :options, :head]
+          methods: [:get, :post, :patch, :options, :head]
       end
     end
   end
