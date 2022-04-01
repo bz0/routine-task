@@ -1,35 +1,26 @@
 import React, {useState, useEffect, useRef} from 'react';
-import { BiTask } from 'react-icons/bi';
 import {
   Flex,
   FormControl,
   FormLabel,
-  Box,List,
-  Input,Button,ListItem,
-  Spacer
+  List,
+  Input,Button
 } from '@chakra-ui/react';
-import moment from 'moment'
+import { TaskRow } from '../components/TaskRow'
+import { getTaskList, createTask } from '../models/task'
 
 export const Home = () => {
     const [tasks, setTask] = useState({})
     const taskRef = useRef(null)
 
     useEffect(() => {
-        show();
-    }, []);
+      getList()
+    }, [])
 
-    const url = 'http://' + process.env.REACT_APP_BACKEND_DOMAIN + '/tasks';
-    const show = async () => {
+    const getList = async () => {
       // countに応じてアクセスするAPIを変えなければならない
-      console.log("url:",url)
-      const response = await fetch(url,{
-        headers: {
-          Authorization: "Bearer " + process.env.REACT_APP_API_TOKEN
-        }
-      });
-      const body = await response.json();
-      console.log("body:", body)
-      setTask(body.data); // stateに反映する
+      const body = await getTaskList()
+      setTask(body.data)
     };
 
     const create = async (e) => {
@@ -38,16 +29,8 @@ export const Home = () => {
             return ;
         }
 
-        await fetch(url,{
-            method: 'POST',
-            body : JSON.stringify({name: taskRef.current.value}),
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: "Bearer " + process.env.REACT_APP_API_TOKEN
-            }
-        });
-
-        show()
+        await createTask(taskRef.current.value)
+        getList()
     }
 
     return (
@@ -63,23 +46,8 @@ export const Home = () => {
           </FormControl>
 
           <List mt={10}>
-            {tasks.length > 0 && tasks.map((task, key) =>
-              <ListItem border="1px solid #eee" mt={key>0 ? 5 : 0} px={8} py={3} display="block" key={key}>
-                <Flex>
-                  <Flex w='60%'>
-                    <Box my='auto'><BiTask /></Box>
-                    <Box ml='5' my='auto'>{task.name}</Box>  
-                  </Flex>
-                  <Spacer />
-                  <Box my='auto' color='gray.400'>{moment(task.updated_at).format('YYYY-MM-DD')}</Box>
-                  <Box ml='5' my='auto'>
-                    <Button size='xs'>編集</Button>
-                  </Box>
-                  <Box my='auto'>
-                    <Button size='xs' ml='5' colorScheme='pink'>削除</Button>
-                  </Box>
-                </Flex>
-              </ListItem>
+            {tasks.length > 0 && tasks.map((task, index) =>
+              <TaskRow task={task} index={index} key={index} />
             )}
           </List>
         </>
