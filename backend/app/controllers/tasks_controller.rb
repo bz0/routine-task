@@ -1,6 +1,7 @@
 class TasksController < ApplicationController
     STATUS_SUCCESS = "OK"
     STATUS_ERROR   = "NG"
+    HTTP_STATUS_200 = 200
     
     TASK_EXIST_MESSAGE       = "対象のタスクが見つかりません"
     FAILED_UPDATE_TASK_MESSAGE      = "タスクの更新に失敗しました"
@@ -9,8 +10,14 @@ class TasksController < ApplicationController
     ALREADY_REGISTERED_TASK_MESSAGE = "既に登録されているタスクです"
 
     def index
-        tasks = Task.enabled.order(updated_at: "DESC") # todo:全件取得しているが後でページネーションにしたい
-        render status: 200, json: { status: STATUS_SUCCESS, count: tasks.count, data: tasks }
+        begin
+            tasks = Task.enabled.order(updated_at: "DESC") # todo:全件取得しているが後でページネーションにしたい
+            json = { status: STATUS_SUCCESS, count: tasks.count, data: tasks }
+        rescue StandardError => e
+            json = { status: STATUS_ERROR, error:{message:e.message} }
+        end
+
+        render status: 200, json: json
     end
 
     # 条件分岐が複雑になり分かりづらくなりそうなので
@@ -33,20 +40,17 @@ class TasksController < ApplicationController
                 raise StandardError, FAILED_REGISTER_TASK_MESSAGE
             end
             
-            http_code = 200
             json = {status:STATUS_SUCCESS, data: task }
         rescue ActionController::ParameterMissing => e
             # 未入力の場合
-            http_code = 400
-            json = {status:STATUS_ERROR, message: BAD_REQUEST_MESSAGE}
+            json = {status:STATUS_ERROR, error: {message: BAD_REQUEST_MESSAGE}}
         rescue StandardError => e
             # DB登録に失敗した場合
-            http_code = 500
-            json = {status:STATUS_ERROR, message: e.message}
+            json = {status:STATUS_ERROR, error: {message: e.message}}
         end
 
         # todo:パラメータが不正な場合にエラーを返せるようにしたい
-        render status: http_code, json: json
+        render status: HTTP_STATUS_200, json: json
     end
 
     def update
@@ -65,19 +69,16 @@ class TasksController < ApplicationController
                 raise StandardError, FAILED_UPDATE_TASK_MESSAGE
             end
             
-            http_code = 200
             json = {status:STATUS_SUCCESS, data:task}
         rescue ActionController::ParameterMissing => e
             # 未入力の場合
-            http_code = 400
-            json = {status:STATUS_ERROR, message: BAD_REQUEST_MESSAGE}
+            json = {status:STATUS_ERROR, error: {message: BAD_REQUEST_MESSAGE}}
         rescue StandardError => e
             # DB登録に失敗した場合
-            http_code = 500
-            json = {status:STATUS_ERROR, message: e.message}
+            json = {status:STATUS_ERROR, error: {message: e.message}}
         end
 
-        render status: http_code, json: json
+        render status: HTTP_STATUS_200, json: json
     end
 
     def destroy
@@ -90,17 +91,15 @@ class TasksController < ApplicationController
             end
 
             task.soft_delete!
-            
-            http_code = 200
             json = {status:STATUS_SUCCESS}
         rescue ActionController::ParameterMissing => e
             # 未入力の場合
-            http_code = 400
-            json = {status:STATUS_ERROR, message: BAD_REQUEST_MESSAGE}
+            json = {status:STATUS_ERROR, error:{message: BAD_REQUEST_MESSAGE}}
         rescue StandardError => e
             # DB登録に失敗した場合
-            http_code = 500
-            json = {status:STATUS_ERROR, message: e.message}
+            json = {status:STATUS_ERROR, error:{message: e.message}}
         end
+
+        render status: HTTP_STATUS_200, json: json
     end
 end
