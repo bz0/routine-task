@@ -14,7 +14,6 @@ import { destroyTask, validate } from '../models/task'
 
 export const TaskRow = (props) => {
     const [isEdit, setIsEdit] = useState(false)
-    const [display, setDisplay] = useState(true)
     const taskRef = useRef({})
 
     useEffect(() => {
@@ -48,7 +47,7 @@ export const TaskRow = (props) => {
         if (window.confirm("削除してよいですか？")){
             const result = await destroyTask(props.task.id)
             if(validate(result)){
-                setDisplay(false)
+                props.getList()
             }
         }
     }
@@ -74,7 +73,7 @@ export const TaskRow = (props) => {
 
     return (
         <>
-            <ListItem border="1px solid #eee" mt={props.index>0 ? 5 : 0} px={8} py={3} display={display ? 'block':'none'}>
+            <ListItem border="1px solid #eee" mt={props.index>0 ? 5 : 0} px={8} py={3}>
                 <Flex>
                     <Flex w='70%'>
                         {isEdit ? <Edit /> : <Show /> }

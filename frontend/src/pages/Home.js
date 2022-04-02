@@ -4,8 +4,14 @@ import {
   FormControl,
   FormLabel,
   List,
-  Input,Button
+  Box,
+  Spacer,
+  Input,Button,
+  InputGroup,
+  InputLeftElement,
+  Text
 } from '@chakra-ui/react';
+import { IoMdSearch } from 'react-icons/io';
 import { TaskRow } from '../components/TaskRow'
 import { getTaskList, createTask, validate } from '../models/task'
 
@@ -47,7 +53,23 @@ export const Home = () => {
             </Flex>
           </FormControl>
 
-          <List mt={10}>
+          <Flex mt={10} justifyContent="flex-end">
+            <Box w='40%'>
+              <InputGroup>
+                <InputLeftElement
+                  pointerEvents='none'
+                  children={<IoMdSearch />}
+                />
+                <Input type='tel' placeholder='検索ワードを入力' />
+              </InputGroup>
+            </Box>
+            <Box w='15%' my='auto' display='flex' ml='5'>
+              <Text my="auto">全</Text>
+              <Text mx="4" my="auto" fontSize='2xl' fontWeight='bold' color='pink.500'>{tasks.length}</Text>
+              <Text my="auto">件</Text>
+            </Box>
+          </Flex>
+          <List mt={2}>
             {tasks.length > 0 && tasks.map((task, index) =>
               <TaskRow task={task} getList={getList} index={index} key={index} />
             )}
