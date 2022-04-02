@@ -26,33 +26,33 @@ RSpec.describe "Tasks", type: :request do
 
       example "タスク登録せずにエラー情報を返す" do
         post tasks_path, params: {"name"=>"test"}, headers: headers
-        expect(response).to have_http_status(500)
+        expect(response).to have_http_status(200)
       
         json = JSON.parse(response.body, { :symbolize_names => true })
         expect(json[:status]).to eq 'NG'
-        expect(json[:message]).to eq TasksController::ALREADY_REGISTERED_TASK_MESSAGE
+        expect(json[:error][:message]).to eq TasksController::ALREADY_REGISTERED_TASK_MESSAGE
       end
     end
 
     context "nameパラメータの値が空" do
       example "タスク登録せずにメッセージを返す" do
         post tasks_path, params: {"name" => ""}, headers: headers
-        expect(response).to have_http_status(400)
+        expect(response).to have_http_status(200)
         expect(response.body).to include 'NG'
 
         json = JSON.parse(response.body, { :symbolize_names => true })
-        expect(json[:message]).to eq TasksController::BAD_REQUEST_MESSAGE
+        expect(json[:error][:message]).to eq TasksController::BAD_REQUEST_MESSAGE
       end
     end
 
     context "nameパラメータがない" do
       example "タスク登録せずにエラー情報を返す" do
         post tasks_path, params: {}, headers: headers
-        expect(response).to have_http_status(400)
+        expect(response).to have_http_status(200)
         expect(response.body).to include 'NG'
 
         json = JSON.parse(response.body, { :symbolize_names => true })
-        expect(json[:message]).to eq TasksController::BAD_REQUEST_MESSAGE
+        expect(json[:error][:message]).to eq TasksController::BAD_REQUEST_MESSAGE
       end
     end
   end
@@ -114,10 +114,10 @@ RSpec.describe "Tasks", type: :request do
     context "更新対象のタスクが存在しない" do
       example "更新されずエラー情報が返る" do
         patch task_path(100), params: {id: 100, name: AFTER_UPDATE_TASK_NAME}, headers: headers
-        expect(response).to have_http_status(500)
+        expect(response).to have_http_status(200)
 
         json = JSON.parse(response.body, { :symbolize_names => true })
-        expect(json[:message]).to eq TasksController::UPDATE_TASK_EXIST_MESSAGE
+        expect(json[:error][:message]).to eq TasksController::TASK_EXIST_MESSAGE
       end
     end
   end
