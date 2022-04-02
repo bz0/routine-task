@@ -49,7 +49,7 @@ export const Home = () => {
 
           <List mt={10}>
             {tasks.length > 0 && tasks.map((task, index) =>
-              <TaskRow task={task} index={index} key={index} />
+              <TaskRow task={task} getList={getList} index={index} key={index} />
             )}
           </List>
         </>

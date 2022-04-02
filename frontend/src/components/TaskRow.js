@@ -15,9 +15,11 @@ import { destroyTask, validate } from '../models/task'
 export const TaskRow = (props) => {
     const [isEdit, setIsEdit] = useState(false)
     const [display, setDisplay] = useState(true)
-    const taskRef = useRef(props.task.name)
+    const taskRef = useRef({})
 
-    useEffect(() => {}, [isEdit, display])
+    useEffect(() => {
+        console.log("props:", props.task.name, props.index)
+    })
 
     //編集エリアを表示
     const handleIsEdit = () => {
@@ -31,13 +33,18 @@ export const TaskRow = (props) => {
 
     //編集したタスク名の保存
     const handleSave = async () => {
-        console.log("handleSave:", props.task.id, taskRef.current)
-        const result = await updateTask(props.task.id, taskRef.current)
-        validate(result)
+        console.log("handleSave:", props.task.id)
+        const result = await updateTask(props.task.id, taskRef.current.value)
+
+        console.log("validate:", validate(result))
+        if (validate(result)){
+            props.getList()
+        }
+        
         setIsEdit(false) //APIレスポンスステータスがNGでも編集エリアは閉じる
     }
 
-    const handleDestroy = async (props) => {
+    const handleDestroy = async () => {
         if (window.confirm("削除してよいですか？")){
             const result = await destroyTask(props.task.id)
             if(validate(result)){
@@ -46,14 +53,10 @@ export const TaskRow = (props) => {
         }
     }
 
-    const taskRefSave = (e) => {
-        taskRef.current = e.target.value
-    }
-
     const Edit = () => {
         return (
             <>
-                <Input defaultValue={taskRef.current} size="xs" onChange={taskRefSave} />
+                <Input defaultValue={props.task.name} ref={taskRef} size="xs" />
                 <Button variant="solid" size="xs" ml={5} px={3} onClick={handleSave}>保存</Button>
                 <Button variant="solid" size="xs" ml={5} px={5} onClick={handleShow}>キャンセル</Button>
             </>
@@ -61,11 +64,10 @@ export const TaskRow = (props) => {
     }
 
     const Show = () => {
-        console.log("Show:", taskRef.current)
         return (
             <>
                 <Box my='auto'><BiTask /></Box>
-                <Box ml='5' my='auto'>{taskRef.current}</Box>
+                <Box ml='5' my='auto'>{props.task.name}</Box>
             </>
         )
     }
@@ -75,7 +77,7 @@ export const TaskRow = (props) => {
             <ListItem border="1px solid #eee" mt={props.index>0 ? 5 : 0} px={8} py={3} display={display ? 'block':'none'}>
                 <Flex>
                     <Flex w='70%'>
-                        {isEdit ? <Edit task={props.task} /> : <Show task={props.task} /> }
+                        {isEdit ? <Edit /> : <Show /> }
                     </Flex>
                     <Spacer />
                     <Box my='auto' color='gray.400'>{moment(props.task.updated_at).format('YYYY-MM-DD')}</Box>
