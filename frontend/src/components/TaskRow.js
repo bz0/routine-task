@@ -15,7 +15,7 @@ import { destroyTask, validate } from '../models/task'
 export const TaskRow = (props) => {
     const [isEdit, setIsEdit] = useState(false)
     const [display, setDisplay] = useState(true)
-    const taskRef = useRef('')
+    const taskRef = useRef(props.task.name)
 
     useEffect(() => {}, [isEdit, display])
 
@@ -31,15 +31,18 @@ export const TaskRow = (props) => {
 
     //編集したタスク名の保存
     const handleSave = async () => {
+        console.log("handleSave:", props.task.id, taskRef.current)
         const result = await updateTask(props.task.id, taskRef.current)
         validate(result)
         setIsEdit(false) //APIレスポンスステータスがNGでも編集エリアは閉じる
     }
 
-    const handleDestroy = async () => {
+    const handleDestroy = async (props) => {
         if (window.confirm("削除してよいですか？")){
             const result = await destroyTask(props.task.id)
-            setDisplay(false)
+            if(validate(result)){
+                setDisplay(false)
+            }
         }
     }
 
@@ -58,6 +61,7 @@ export const TaskRow = (props) => {
     }
 
     const Show = () => {
+        console.log("Show:", taskRef.current)
         return (
             <>
                 <Box my='auto'><BiTask /></Box>
@@ -65,8 +69,6 @@ export const TaskRow = (props) => {
             </>
         )
     }
-
-    taskRef.current = props.task.name
 
     return (
         <>
