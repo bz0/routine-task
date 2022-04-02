@@ -8,14 +8,14 @@ import {
 } from '@chakra-ui/react';
 import { Home } from './pages/Home'
 
-import { BsClipboardCheck } from 'react-icons/bs';
+import { MdOutlineChecklist } from 'react-icons/md';
 
 function App() {
   return (
     <ChakraProvider theme={theme}>
         <Flex justifyContent="flex-start" px={8} py={3} backgroundColor="#000000" color="whiteAlpha.800">
           <Heading size="sm" display="flex">
-            <Box><BsClipboardCheck /></Box>
+            <Box><MdOutlineChecklist /></Box>
             <Box ml="3">習慣化タスクリマインダー</Box>
           </Heading>
         </Flex>
