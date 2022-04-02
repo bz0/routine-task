@@ -7,7 +7,7 @@ import {
   Input,Button
 } from '@chakra-ui/react';
 import { TaskRow } from '../components/TaskRow'
-import { getTaskList, createTask } from '../models/task'
+import { getTaskList, createTask, validate } from '../models/task'
 
 export const Home = () => {
     const [tasks, setTask] = useState({})
@@ -22,15 +22,17 @@ export const Home = () => {
       console.log("body:", body)
       setTask(body.data)
     };
-
+    
     const create = async (e) => {
-        if (!addTaskRef.current.value) {
-            alert("タスク名が未入力です")
-            return ;
-        }
+      if (!addTaskRef.current.value) {
+          alert("タスク名が未入力です")
+          return ;
+      }
 
-        await createTask(addTaskRef.current.value)
+      const result = await createTask(addTaskRef.current.value)
+      if(validate(result)){
         getList()
+      }
     }
 
     return (

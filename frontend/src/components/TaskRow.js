@@ -10,7 +10,7 @@ import {
 import { BiTask } from 'react-icons/bi';
 import { updateTask } from '../models/task'
 import moment from 'moment'
-import { destroyTask } from '../models/task'
+import { destroyTask, validate } from '../models/task'
 
 export const TaskRow = (props) => {
     const [isEdit, setIsEdit] = useState(false)
@@ -30,14 +30,15 @@ export const TaskRow = (props) => {
     }
 
     //編集したタスク名の保存
-    const handleSave = () => {
-        updateTask(props.task.id, taskRef.current)
-        setIsEdit(false)
+    const handleSave = async () => {
+        const result = await updateTask(props.task.id, taskRef.current)
+        validate(result)
+        setIsEdit(false) //APIレスポンスステータスがNGでも編集エリアは閉じる
     }
 
     const handleDestroy = async () => {
         if (window.confirm("削除してよいですか？")){
-            await destroyTask(props.task.id)
+            const result = await destroyTask(props.task.id)
             setDisplay(false)
         }
     }
