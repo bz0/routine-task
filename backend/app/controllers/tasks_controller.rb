@@ -11,15 +11,14 @@ class TasksController < ApplicationController
 
     def index
         begin
-            tasks = Task.enabled
-                        .order(created_at: "DESC")
+            @tasks = Task.enabled
+                         .order(created_at: "DESC")
             
             if params.key?("keyword")
-                # キーワード検索
-                tasks = Task.where('name LIKE ?', "%#{params[:keyword]}%")
+                @tasks = @tasks.where('name LIKE ?', "%#{params[:keyword]}%") # キーワード検索
             end
 
-            json = { status: STATUS_SUCCESS, count: tasks.count, data: tasks }
+            json = { status: STATUS_SUCCESS, count: @tasks.count, data: @tasks }
         rescue StandardError => e
             json = { status: STATUS_ERROR, error:{message:e.message} }
         end
