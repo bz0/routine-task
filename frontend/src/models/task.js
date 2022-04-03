@@ -11,8 +11,21 @@ export const validate = (result) => {
   return true
 } 
 
-export const getTaskList = async () => {
-  return await(await fetch(url,{
+export const getTaskList = async (params) => {
+  let getTaskListUrl = url
+  if (params)
+  {
+    getTaskListUrl = url + "?" +
+      Object.entries(params)
+      .map((e) => {
+        let key = e[0];
+        let value = encodeURI(e[1]);
+        return `${key}=${value}`;
+      })
+      .join("&")
+  }
+
+  return await(await fetch(getTaskListUrl,{
     headers: {
       Authorization: bearerToken
     }

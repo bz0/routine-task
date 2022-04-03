@@ -18,13 +18,18 @@ import { getTaskList, createTask, validate } from '../models/task'
 export const Home = () => {
     const [tasks, setTask] = useState({})
     const addTaskRef = useRef(null)
+    const searchRef = useRef(null)
 
     useEffect(() => {
       getList()
     }, [])
 
     const getList = async () => {
-      const body = await getTaskList()
+      let params = {}
+      if (searchRef.current.value){
+        params = {keyword: searchRef.current.value}
+      }
+      const body = await getTaskList(params)
       console.log("body:", body)
       setTask(body.data)
     };
@@ -39,6 +44,10 @@ export const Home = () => {
       if(validate(result)){
         getList()
       }
+    }
+
+    const search = async () => {
+      getList()
     }
 
     return (
@@ -60,7 +69,7 @@ export const Home = () => {
                   pointerEvents='none'
                   children={<IoMdSearch />}
                 />
-                <Input type='tel' placeholder='検索ワードを入力' />
+                <Input type='text' ref={searchRef} placeholder='検索ワードを入力' onChange={search} />
               </InputGroup>
             </Box>
             <Box w='15%' my='auto' display='flex' ml='5'>
@@ -71,7 +80,7 @@ export const Home = () => {
           </Flex>
           <List mt={2}>
             {tasks.length > 0 && tasks.map((task, index) =>
-              <TaskRow task={task} getList={getList} index={index} key={index} />
+              <TaskRow task={task} getList={getList} index={index} key={task.id} />
             )}
           </List>
         </>
