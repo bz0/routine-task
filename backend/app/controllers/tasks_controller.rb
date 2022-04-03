@@ -11,7 +11,14 @@ class TasksController < ApplicationController
 
     def index
         begin
-            tasks = Task.enabled.order(updated_at: "DESC") # todo:全件取得しているが後でページネーションにしたい
+            tasks = Task.enabled
+                        .order(created_at: "DESC")
+            
+            if params.key?("keyword")
+                # キーワード検索
+                tasks = Task.where('name LIKE ?', "%#{params[:keyword]}%")
+            end
+
             json = { status: STATUS_SUCCESS, count: tasks.count, data: tasks }
         rescue StandardError => e
             json = { status: STATUS_ERROR, error:{message:e.message} }
@@ -19,9 +26,6 @@ class TasksController < ApplicationController
 
         render status: 200, json: json
     end
-
-    # 条件分岐が複雑になり分かりづらくなりそうなので
-    # 例外でキャッチするようにしています
 
     def create
         begin
