@@ -55,8 +55,8 @@ export const TaskRow = (props) => {
     const Edit = () => {
         return (
             <>
-                <Input defaultValue={props.task.name} ref={taskRef} size="xs" />
-                <Button variant="solid" size="xs" ml={5} px={3} onClick={handleSave}>保存</Button>
+                <Input defaultValue={props.task.name} ref={taskRef} size="xs" focusBorderColor='pink.500' w='100%' />
+                <Button variant="solid" size="xs" ml={5} px={3} onClick={handleSave} colorScheme='pink'>保存</Button>
                 <Button variant="solid" size="xs" ml={5} px={5} onClick={handleShow}>キャンセル</Button>
             </>
         )
@@ -75,7 +75,7 @@ export const TaskRow = (props) => {
         <>
             <ListItem border="1px solid #eee" mt={props.index>0 ? 5 : 0} px={3} py={3}>
                 <Flex w='100%'>
-                    <Flex>
+                    <Flex w='70%'>
                         {isEdit ? <Edit /> : <Show /> }
                     </Flex>
                     
@@ -83,10 +83,10 @@ export const TaskRow = (props) => {
                     <Flex align='right'>
                         <Box my='auto' color='gray.400' display={{base:"none", md:"block"}}>{moment(props.task.updated_at).format('YYYY-MM-DD')}</Box>
                         <Box ml='5' my='auto'>
-                            <Button size='xs' onClick={handleIsEdit}>編集</Button>
+                            <Button size='xs' colorScheme='pink' onClick={handleIsEdit}>編集</Button>
                         </Box>
                         <Box my='auto'>
-                            <Button size='xs' ml='5' colorScheme='pink' onClick={handleDestroy}>削除</Button>
+                            <Button size='xs' ml='5' onClick={handleDestroy}>削除</Button>
                         </Box>
                     </Flex>
                 </Flex>

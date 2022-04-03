@@ -54,8 +54,8 @@ export const Home = () => {
           <FormControl mt={5}>
             <FormLabel fontWeight="bold">タスクを追加する</FormLabel>
             <Flex>
-              <Input ref={addTaskRef} />
-              <Button variant="solid" size="md" ml={5} onClick={create}>
+              <Input ref={addTaskRef} focusBorderColor='pink.500' />
+              <Button variant="solid" size="md" ml={5} onClick={create} colorScheme='pink'>
                 追加
               </Button>
             </Flex>
@@ -68,7 +68,7 @@ export const Home = () => {
                   pointerEvents='none'
                   children={<IoMdSearch />}
                 />
-                <Input type='text' ref={searchRef} placeholder='検索ワードを入力' onChange={search} />
+                <Input type='text' ref={searchRef} placeholder='検索ワードを入力'  focusBorderColor='pink.500' onChange={search} />
               </InputGroup>
             </Box>
             <Box my='auto' display='flex' ml='5' mr='3'>
