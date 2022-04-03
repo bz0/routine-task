@@ -88,6 +88,27 @@ RSpec.describe "Tasks", type: :request do
 
       end
     end
+
+    context "検索ワードに「掃除」を指定" do
+      before do
+        create(:task, name:"台所の掃除")
+        create(:task, name:"掃除用品の補充")
+        create(:task, name:"玄関の掃除する")
+        create(:task, name:"洗濯")
+        create(:task, name:"不要品の整理")
+      end
+
+      example "タスク名に「掃除」が入っているタスク情報を返す" do
+        get tasks_path,params: {keyword:"掃除"},headers: headers
+        expect(response).to have_http_status(200)
+        json = JSON.parse(response.body, { :symbolize_names => true })
+        data = json[:data]
+
+        expect(json[:count]).to eq 3
+        expect(data.length).to eq 3
+        expect(response.body).to include 'OK'
+      end
+    end
   end
 
   # 同じものを使いまわしする為定数指定
