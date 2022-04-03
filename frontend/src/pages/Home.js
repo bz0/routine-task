@@ -62,7 +62,7 @@ export const Home = () => {
           </FormControl>
 
           <Flex mt={10} justifyContent="flex-end">
-            <Box w='40%'>
+            <Box w={{base:"100%", md:"40%"}}>
               <InputGroup>
                 <InputLeftElement
                   pointerEvents='none'

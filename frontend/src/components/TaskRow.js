@@ -73,21 +73,22 @@ export const TaskRow = (props) => {
 
     return (
         <>
-            <ListItem border="1px solid #eee" mt={props.index>0 ? 5 : 0} px={8} py={3}>
-                <Flex>
-                    <Flex w='70%'>
+            <ListItem border="1px solid #eee" mt={props.index>0 ? 5 : 0} px={3} py={3}>
+                <Flex w='100%'>
+                    <Flex>
                         {isEdit ? <Edit /> : <Show /> }
                     </Flex>
+                    
                     <Spacer />
-                    <Box my='auto' color='gray.400'>{moment(props.task.updated_at).format('YYYY-MM-DD')}</Box>
-
-                    <Box ml='5' my='auto'>
-                        <Button size='xs' onClick={handleIsEdit}>編集</Button>
-                    </Box>
-
-                    <Box my='auto'>
-                        <Button size='xs' ml='5' colorScheme='pink' onClick={handleDestroy}>削除</Button>
-                    </Box>
+                    <Flex align='right'>
+                        <Box my='auto' color='gray.400' display={{base:"none", md:"block"}}>{moment(props.task.updated_at).format('YYYY-MM-DD')}</Box>
+                        <Box ml='5' my='auto'>
+                            <Button size='xs' onClick={handleIsEdit}>編集</Button>
+                        </Box>
+                        <Box my='auto'>
+                            <Button size='xs' ml='5' colorScheme='pink' onClick={handleDestroy}>削除</Button>
+                        </Box>
+                    </Flex>
                 </Flex>
             </ListItem>
         </>
