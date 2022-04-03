@@ -72,9 +72,9 @@ export const Home = () => {
                 <Input type='text' ref={searchRef} placeholder='検索ワードを入力' onChange={search} />
               </InputGroup>
             </Box>
-            <Box w='15%' my='auto' display='flex' ml='5'>
+            <Box my='auto' display='flex' ml='5' mr='3'>
               <Text my="auto">全</Text>
-              <Text mx="4" my="auto" fontSize='2xl' fontWeight='bold' color='pink.500'>{tasks.length}</Text>
+              <Text mx="2" my="auto" fontSize='2xl' fontWeight='bold' color='pink.500'>{tasks.length}</Text>
               <Text my="auto">件</Text>
             </Box>
           </Flex>
