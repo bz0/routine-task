@@ -1,4 +1,4 @@
-const url = 'http://' + process.env.REACT_APP_BACKEND_DOMAIN + '/tasks';
+const url = 'http://' + process.env.REACT_APP_BACKEND_DOMAIN + '/v1/tasks';
 const bearerToken = "Bearer " + process.env.REACT_APP_API_TOKEN
 
 //APIレスポンスステータスが「NG」のとき
