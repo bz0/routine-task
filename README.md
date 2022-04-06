@@ -51,6 +51,13 @@ $ docker-compose run backend rake routine_task_notification:random
 
 ※タスクが１件も登録されてない場合は「[Warn]タスクが存在しません。画面からタスクを追加して下さい」という通知が飛びます
 
+
+### テスト
+
+```
+$ docker-compose run backend rspec spec
+```
+
 ### 備考
 
 - .env.sampleにAPI_TOKENを直に貼ってます（実プロジェクトだとやらないですが、今回固定トークンな為そのまま貼ってます）
