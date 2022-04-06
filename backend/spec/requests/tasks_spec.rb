@@ -110,30 +110,29 @@ RSpec.describe "Tasks", type: :request do
     end
   end
 
-  # 同じものを使いまわしする為定数指定
-  BEFORE_UPDATE_TASK_NAME = '皿洗いする'.freeze # 更新前のタスク名
-  AFTER_UPDATE_TASK_NAME = '掃除する'.freeze # 更新後のタスク名
-
   describe "PATCH /task 更新処理" do
+    let(:before_update_task) { '皿洗いする' }
+    let(:after_update_task) { '掃除する' }
+
     context "更新対象のタスクが存在する" do
       before do
-        create(:task, name: BEFORE_UPDATE_TASK_NAME)
+        create(:task, name: before_update_task)
       end
 
       example "タスク名が「掃除する」に更新される" do
-        task = Task.find_by(name: BEFORE_UPDATE_TASK_NAME)
-        patch task_path(task), params: { id: task[:id], name: AFTER_UPDATE_TASK_NAME }, headers: headers
+        task = Task.find_by(name: before_update_task)
+        patch task_path(task), params: { id: task[:id], name: after_update_task }, headers: headers
         expect(response).to have_http_status(200)
 
         json = JSON.parse(response.body, { :symbolize_names => true })
         after_name = json[:data][:name]
-        expect(after_name).to eq AFTER_UPDATE_TASK_NAME
+        expect(after_name).to eq after_update_task
       end
     end
 
     context "更新対象のタスクが存在しない" do
       example "更新されずエラー情報が返る" do
-        patch task_path(100), params: { id: 100, name: AFTER_UPDATE_TASK_NAME }, headers: headers
+        patch task_path(100), params: { id: 100, name: after_update_task }, headers: headers
         expect(response).to have_http_status(200)
 
         json = JSON.parse(response.body, { :symbolize_names => true })
