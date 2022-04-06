@@ -10,12 +10,18 @@ RSpec.describe "Tasks", type: :request do
     { Authorization: "Bearer #{ENV['API_TOKEN']}" }
   end
 
-  describe "POST /task 登録処理" do
+  describe "POST /tasks 登録処理" do
     context "nameパラメータに値をセット" do
       example "タスクを1件登録" do
         post tasks_path, params: { "name" => "test" }, headers: headers
         expect(response).to have_http_status(200)
-        expect(response.body).to include 'OK'
+        json = JSON.parse(response.body, { :symbolize_names => true })
+
+        expect(json[:status]).to eq 'OK'
+
+        # 登録したデータが返ってきているか
+        expect(json[:data][:name]).to eq 'test'
+        expect(json[:data][:deleted_at]).to eq nil
       end
     end
 
@@ -57,7 +63,7 @@ RSpec.describe "Tasks", type: :request do
     end
   end
 
-  describe "GET /task 全件取得" do
+  describe "GET /tasks 全件取得" do
     context "5件データが存在する" do
       before do
         create_list(:task, 5)
@@ -110,7 +116,7 @@ RSpec.describe "Tasks", type: :request do
     end
   end
 
-  describe "PATCH /task 更新処理" do
+  describe "PATCH /tasks 更新処理" do
     let(:before_update_task) { '皿洗いする' }
     let(:after_update_task) { '掃除する' }
 
