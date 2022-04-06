@@ -1,0 +1,19 @@
+# .rubocop.yml
+
+inherit_from:
+  - .rubocop_airbnb.yml
+
+# Rails用に最適化
+Rails:
+  Enabled: true
+
+AllCops:
+  Exclude:
+    - 'db/**/*'
+    - 'config/**/*'
+    - 'script/**/*'
+    - 'node_modules/**/*'
+    - 'bin/*'
+    - '**/Gemfile'
+    - 'vendor/**/*'
+    - '.git/**/*'
