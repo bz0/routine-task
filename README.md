@@ -23,11 +23,15 @@ Incoming Webhook インテグレーションの追加を行います。
 下記リンクに飛び、通知したいチャンネルを選択して下さい。  
 https://slack.com/services/new/incoming-webhook
 
-出てきたWebhookURL（https://hooks.slack.com/services/xxxxx/xxxxx）を.envに設定して下さい
+表示されたWebhookURLを.envに設定します。  
+
+#### 環境設定ファイルのテンプレートをコピーする
 
 ```
 $ cp .env.sample .env
 ```
+
+#### WebhookURLを.envに記載する
 
 .env
 ```.env
