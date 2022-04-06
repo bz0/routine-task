@@ -1,18 +1,18 @@
 class ApplicationController < ActionController::API
-    include ActionController::HttpAuthentication::Token::ControllerMethods
+  include ActionController::HttpAuthentication::Token::ControllerMethods
 
-    before_action :set_session
-    before_action :require_login
+  before_action :set_session
+  before_action :require_login
 
-    @session = {}
+  @session = {}
 
-    def require_login
-        render json: { error: 'unauthorized' }, status: :unauthorized if @session.nil?
+  def require_login
+    render json: { error: 'unauthorized' }, status: :unauthorized if @session.nil?
+  end
+
+  def set_session
+    authenticate_with_http_token do |token, options|
+      @session = Session.get(token)
     end
-
-    def set_session
-        authenticate_with_http_token do |token, options|
-            @session = Session.get(token)
-        end
-    end
+  end
 end

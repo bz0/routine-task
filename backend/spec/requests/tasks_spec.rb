@@ -13,7 +13,7 @@ RSpec.describe "Tasks", type: :request do
   describe "POST /task 登録処理" do
     context "nameパラメータに値をセット" do
       example "タスクを1件登録" do
-        post tasks_path, params: {"name"=>"test"}, headers: headers
+        post tasks_path, params: { "name" => "test" }, headers: headers
         expect(response).to have_http_status(200)
         expect(response.body).to include 'OK'
       end
@@ -25,9 +25,9 @@ RSpec.describe "Tasks", type: :request do
       end
 
       example "タスク登録せずにエラー情報を返す" do
-        post tasks_path, params: {"name"=>"test"}, headers: headers
+        post tasks_path, params: { "name" => "test" }, headers: headers
         expect(response).to have_http_status(200)
-      
+
         json = JSON.parse(response.body, { :symbolize_names => true })
         expect(json[:status]).to eq 'NG'
         expect(json[:error][:message]).to eq TasksController::ALREADY_REGISTERED_TASK_MESSAGE
@@ -36,7 +36,7 @@ RSpec.describe "Tasks", type: :request do
 
     context "nameパラメータの値が空" do
       example "タスク登録せずにメッセージを返す" do
-        post tasks_path, params: {"name" => ""}, headers: headers
+        post tasks_path, params: { "name" => "" }, headers: headers
         expect(response).to have_http_status(200)
         expect(response.body).to include 'NG'
 
@@ -64,7 +64,7 @@ RSpec.describe "Tasks", type: :request do
       end
 
       example "5件分のタスク情報を返す" do
-        get tasks_path,params: {},headers: headers
+        get tasks_path, params: {}, headers: headers
         expect(response).to have_http_status(200)
         json = JSON.parse(response.body, { :symbolize_names => true })
         data = json[:data]
@@ -77,7 +77,7 @@ RSpec.describe "Tasks", type: :request do
 
     context "データが存在しない" do
       example "0件分のタスク情報を返す" do
-        get tasks_path,params: {},headers: headers
+        get tasks_path, params: {}, headers: headers
         expect(response).to have_http_status(200)
         json = JSON.parse(response.body, { :symbolize_names => true })
         data = json[:data]
@@ -85,21 +85,20 @@ RSpec.describe "Tasks", type: :request do
         expect(json[:count]).to eq 0
         expect(data.length).to eq 0
         expect(response.body).to include 'OK'
-
       end
     end
 
     context "検索ワードに「掃除」を指定" do
       before do
-        create(:task, name:"台所の掃除")
-        create(:task, name:"掃除用品の補充")
-        create(:task, name:"玄関の掃除する")
-        create(:task, name:"洗濯")
-        create(:task, name:"不要品の整理")
+        create(:task, name: "台所の掃除")
+        create(:task, name: "掃除用品の補充")
+        create(:task, name: "玄関の掃除する")
+        create(:task, name: "洗濯")
+        create(:task, name: "不要品の整理")
       end
 
       example "タスク名に「掃除」が入っているタスク情報を返す" do
-        get tasks_path,params: {keyword:"掃除"},headers: headers
+        get tasks_path, params: { keyword: "掃除" }, headers: headers
         expect(response).to have_http_status(200)
         json = JSON.parse(response.body, { :symbolize_names => true })
         data = json[:data]
@@ -112,8 +111,8 @@ RSpec.describe "Tasks", type: :request do
   end
 
   # 同じものを使いまわしする為定数指定
-  BEFORE_UPDATE_TASK_NAME = '皿洗いする' # 更新前のタスク名
-  AFTER_UPDATE_TASK_NAME = '掃除する'    # 更新後のタスク名
+  BEFORE_UPDATE_TASK_NAME = '皿洗いする'.freeze # 更新前のタスク名
+  AFTER_UPDATE_TASK_NAME = '掃除する'.freeze # 更新後のタスク名
 
   describe "PATCH /task 更新処理" do
     context "更新対象のタスクが存在する" do
@@ -123,7 +122,7 @@ RSpec.describe "Tasks", type: :request do
 
       example "タスク名が「掃除する」に更新される" do
         task = Task.find_by(name: BEFORE_UPDATE_TASK_NAME)
-        patch task_path(task), params: {id: task[:id], name: AFTER_UPDATE_TASK_NAME}, headers: headers
+        patch task_path(task), params: { id: task[:id], name: AFTER_UPDATE_TASK_NAME }, headers: headers
         expect(response).to have_http_status(200)
 
         json = JSON.parse(response.body, { :symbolize_names => true })
@@ -134,7 +133,7 @@ RSpec.describe "Tasks", type: :request do
 
     context "更新対象のタスクが存在しない" do
       example "更新されずエラー情報が返る" do
-        patch task_path(100), params: {id: 100, name: AFTER_UPDATE_TASK_NAME}, headers: headers
+        patch task_path(100), params: { id: 100, name: AFTER_UPDATE_TASK_NAME }, headers: headers
         expect(response).to have_http_status(200)
 
         json = JSON.parse(response.body, { :symbolize_names => true })
@@ -143,21 +142,19 @@ RSpec.describe "Tasks", type: :request do
     end
   end
 
-=begin 
-  # todo: saveの際に例外を発生させたいが上手くいかないので後でみる
-
-  describe "POST /task/create [異常系]" do
-    context 'DB登録失敗' do
-      before do
-        c = dataController.new
-        allow(c).to receive(:create).and_raise(ActiveRecord::RecordNotSaved, "error")
-      end
-
-      post :create, params: {"name"=>"test"}
-      expect(response).to have_http_status(400) # httpステータスが400かチェック
-      expect(response.body).to include 'NG'     # レスポンスに「NG」が入っているかチェック
-    end
-  end
-=end
-
+  #
+  #   # todo: saveの際に例外を発生させたいが上手くいかないので後でみる
+  #
+  #   describe "POST /task/create [異常系]" do
+  #     context 'DB登録失敗' do
+  #       before do
+  #         c = dataController.new
+  #         allow(c).to receive(:create).and_raise(ActiveRecord::RecordNotSaved, "error")
+  #       end
+  #
+  #       post :create, params: {"name"=>"test"}
+  #       expect(response).to have_http_status(400) # httpステータスが400かチェック
+  #       expect(response.body).to include 'NG'     # レスポンスに「NG」が入っているかチェック
+  #     end
+  #   end
 end
