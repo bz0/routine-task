@@ -44,7 +44,7 @@ class TasksController < ApplicationController
       end
 
       json = { status: STATUS_SUCCESS, data: task }
-    rescue ActionController::ParameterMissing => e
+    rescue ActionController::ParameterMissing
       # 未入力の場合
       json = { status: STATUS_ERROR, error: { message: BAD_REQUEST_MESSAGE } }
     rescue StandardError => e
@@ -73,7 +73,7 @@ class TasksController < ApplicationController
       end
 
       json = { status: STATUS_SUCCESS, data: task }
-    rescue ActionController::ParameterMissing => e
+    rescue ActionController::ParameterMissing
       # 未入力の場合
       json = { status: STATUS_ERROR, error: { message: BAD_REQUEST_MESSAGE } }
     rescue StandardError => e
@@ -95,7 +95,7 @@ class TasksController < ApplicationController
 
       task.soft_delete!
       json = { status: STATUS_SUCCESS }
-    rescue ActionController::ParameterMissing => e
+    rescue ActionController::ParameterMissing
       # 未入力の場合
       json = { status: STATUS_ERROR, error: { message: BAD_REQUEST_MESSAGE } }
     rescue StandardError => e
