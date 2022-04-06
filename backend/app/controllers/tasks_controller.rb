@@ -30,7 +30,6 @@ class TasksController < ApplicationController
     begin
       params.require(:name)
 
-      # 既に登録されているタスクかチェックする
       task = Task.find_by(name: params[:name])
       unless task.nil?
         raise StandardError, ALREADY_REGISTERED_TASK_MESSAGE
