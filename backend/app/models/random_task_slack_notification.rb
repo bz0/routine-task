@@ -2,6 +2,9 @@ class RandomTaskSlackNotification
   NOT_SET_ENV_KEY_MESSAGE = "SlackのWebhookURLが環境変数に設定されていません。.envをご確認下さい".freeze
   EXIST_TASK_MESSAGE      = "[Warn]タスクが存在しません。画面からタスクを追加して下さい".freeze
 
+  USER_NAME = "通知Bot".freeze
+  ICON_EMOJI = ":sunglasses:".freeze
+
   # タスク全件からランダムに１件Slackへ通知する
   def exec
     begin
@@ -19,12 +22,8 @@ class RandomTaskSlackNotification
       message = e.message
     end
 
-    slack_notifier.ping message
-  end
-
-  # Slack通知設定
-  def slack_notifier
-    Slack::Notifier.new(ENV['SLACK_WEB_HOOK_URL'], username: '通知Bot', icon_emoji: ':sunglasses:')
+    slack_incoming_webhook = SlackIncomingWebhook.new(USER_NAME, ICON_EMOJI)
+    slack_incoming_webhook.exec(message)
   end
 
   # タスクからランダムに１件取得
