@@ -53,5 +53,5 @@ $ docker-compose run backend rake routine_task_notification:random
 
 ### 備考
 
-- .env.sampleにAPI_TOKENが貼られてますがそのままでお願いします（実プロジェクトだとやらないですが、今回固定トークンなのでそのまま貼ってます）
+- .env.sampleにAPI_TOKENが直に貼ってます（実プロジェクトだとやらないですが、今回固定トークンな為そのまま貼ってます）
 - 初期データとしてタスクが10件入ります
