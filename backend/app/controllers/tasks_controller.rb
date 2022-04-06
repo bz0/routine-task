@@ -23,7 +23,7 @@ class TasksController < ApplicationController
       json = { status: STATUS_ERROR, error: { message: e.message } }
     end
 
-    render status: 200, json: json
+    render status: HTTP_STATUS_200, json: json
   end
 
   def create
