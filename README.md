@@ -55,3 +55,4 @@ $ docker-compose run backend rake routine_task_notification:random
 
 - .env.sampleにAPI_TOKENを直に貼ってます（実プロジェクトだとやらないですが、今回固定トークンな為そのまま貼ってます）
 - 初期データとしてタスクが10件入ります
+- dockerファイル等をbackendのディレクトリから分離したかったですが、分離するとエラーが出て解消できなかった為この構成になっています。
