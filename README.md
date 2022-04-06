@@ -16,7 +16,7 @@ $ cd backend && make build && make up
 http://localhost:3001
 ```
 
-- バックエンド：http://localhost:3000
+- バックエンド(API)：http://localhost:3000
 - フロントエンド：http://localhost:3001
 
 ### 2.slackへの通知設定
