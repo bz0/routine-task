@@ -7,7 +7,7 @@
 下記コマンドを実行しDB作成・docker環境構築・railsサーバ立ち上げを行います。
 
 ```
-$ cd backend && make build && make up
+$ cd backend && make build
 ```
 
 下記URLで画面を開けます。
@@ -50,3 +50,8 @@ $ docker-compose run backend rake routine_task_notification:random
 ```
 
 ※タスクが１件も登録されてない場合は「[Warn]タスクが存在しません。画面からタスクを追加して下さい」という通知が飛びます
+
+### 備考
+
+- .env.sampleにAPI_TOKENが貼られてますがそのままでお願いします（実プロジェクトだとやらないですが、今回固定トークンなのでそのまま貼ってます）
+- 初期データとしてタスクが10件入ります
