@@ -17,7 +17,7 @@ RSpec.describe "Tasks", type: :request do
         expect(response).to have_http_status(200)
         json = JSON.parse(response.body, { :symbolize_names => true })
 
-        expect(json[:status]).to eq 'OK'
+        expect(json[:status]).to eq TasksController::STATUS_SUCCESS
 
         # 登録したデータが返ってきているか
         expect(json[:data][:name]).to eq 'test'
@@ -35,7 +35,7 @@ RSpec.describe "Tasks", type: :request do
         expect(response).to have_http_status(200)
 
         json = JSON.parse(response.body, { :symbolize_names => true })
-        expect(json[:status]).to eq 'NG'
+        expect(json[:status]).to eq TasksController::STATUS_ERROR
         expect(json[:error][:message]).to eq TasksController::ALREADY_REGISTERED_TASK_MESSAGE
       end
     end
@@ -44,9 +44,9 @@ RSpec.describe "Tasks", type: :request do
       example "タスク登録せずにメッセージを返す" do
         post tasks_path, params: { "name" => "" }, headers: headers
         expect(response).to have_http_status(200)
-        expect(response.body).to include 'NG'
 
         json = JSON.parse(response.body, { :symbolize_names => true })
+        expect(json[:status]).to eq TasksController::STATUS_ERROR
         expect(json[:error][:message]).to eq TasksController::BAD_REQUEST_MESSAGE
       end
     end
@@ -55,10 +55,23 @@ RSpec.describe "Tasks", type: :request do
       example "タスク登録せずにエラー情報を返す" do
         post tasks_path, params: {}, headers: headers
         expect(response).to have_http_status(200)
-        expect(response.body).to include 'NG'
 
         json = JSON.parse(response.body, { :symbolize_names => true })
+        expect(json[:status]).to eq TasksController::STATUS_ERROR
         expect(json[:error][:message]).to eq TasksController::BAD_REQUEST_MESSAGE
+      end
+    end
+
+    context "DB登録を失敗させる" do
+      it "タスク登録せずにエラー情報を返す" do
+        allow_any_instance_of(Task).to receive(:save!).and_return(false)
+
+        post tasks_path, params: { "name" => "test" }, headers: headers
+        expect(response).to have_http_status(200)
+
+        json = JSON.parse(response.body, { :symbolize_names => true })
+        expect(json[:status]).to eq TasksController::STATUS_ERROR
+        expect(json[:error][:message]).to eq TasksController::FAILED_REGISTER_TASK_MESSAGE
       end
     end
   end
@@ -77,7 +90,7 @@ RSpec.describe "Tasks", type: :request do
 
         expect(json[:count]).to eq 5
         expect(data.length).to eq 5
-        expect(response.body).to include 'OK'
+        expect(json[:status]).to eq TasksController::STATUS_SUCCESS
       end
     end
 
@@ -85,12 +98,13 @@ RSpec.describe "Tasks", type: :request do
       example "0件分のタスク情報を返す" do
         get tasks_path, params: {}, headers: headers
         expect(response).to have_http_status(200)
+
         json = JSON.parse(response.body, { :symbolize_names => true })
         data = json[:data]
 
         expect(json[:count]).to eq 0
         expect(data.length).to eq 0
-        expect(response.body).to include 'OK'
+        expect(json[:status]).to eq TasksController::STATUS_SUCCESS
       end
     end
 
@@ -111,7 +125,7 @@ RSpec.describe "Tasks", type: :request do
 
         expect(json[:count]).to eq 3
         expect(data.length).to eq 3
-        expect(response.body).to include 'OK'
+        expect(json[:status]).to eq TasksController::STATUS_SUCCESS
       end
     end
   end
@@ -132,6 +146,8 @@ RSpec.describe "Tasks", type: :request do
 
         json = JSON.parse(response.body, { :symbolize_names => true })
         after_name = json[:data][:name]
+
+        expect(json[:status]).to eq TasksController::STATUS_SUCCESS
         expect(after_name).to eq after_update_task
       end
     end
@@ -142,24 +158,10 @@ RSpec.describe "Tasks", type: :request do
         expect(response).to have_http_status(200)
 
         json = JSON.parse(response.body, { :symbolize_names => true })
+
+        expect(json[:status]).to eq TasksController::STATUS_ERROR
         expect(json[:error][:message]).to eq TasksController::TASK_EXIST_MESSAGE
       end
     end
   end
-
-  #
-  #   # todo: saveの際に例外を発生させたいが上手くいかないので後でみる
-  #
-  #   describe "POST /task/create [異常系]" do
-  #     context 'DB登録失敗' do
-  #       before do
-  #         c = dataController.new
-  #         allow(c).to receive(:create).and_raise(ActiveRecord::RecordNotSaved, "error")
-  #       end
-  #
-  #       post :create, params: {"name"=>"test"}
-  #       expect(response).to have_http_status(400) # httpステータスが400かチェック
-  #       expect(response.body).to include 'NG'     # レスポンスに「NG」が入っているかチェック
-  #     end
-  #   end
 end
