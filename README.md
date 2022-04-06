@@ -4,7 +4,7 @@
 
 ### 1.ローカル環境構築
 
-下記コマンドを実行しDB作成・docker環境構築・railsサーバ立ち上げを行います。
+下記コマンドをルートディレクトリから実行しDB作成・docker環境構築・railsサーバ立ち上げを行います。
 
 ```
 $ cd backend && make build
@@ -34,6 +34,7 @@ https://slack.com/services/new/incoming-webhook
 ```
 $ cp .env.sample .env
 ```
+※backendディレクトリ直下で実行して下さい
 
 #### 2-3.WebhookURLを.envに記載する
 
@@ -49,7 +50,8 @@ SLACK_WEB_HOOK_URL='WebhookURL'
 $ docker-compose run backend rake routine_task_notification:random
 ```
 
-※タスクが１件も登録されてない場合は「[Warn]タスクが存在しません。画面からタスクを追加して下さい」という通知が飛びます
+- backendディレクトリ直下で実行して下さい  
+- タスクが１件も登録されてない場合は「[Warn]タスクが存在しません。画面からタスクを追加して下さい」という通知が飛びます
 
 
 ### テスト
@@ -57,6 +59,8 @@ $ docker-compose run backend rake routine_task_notification:random
 ```
 $ docker-compose run backend rspec spec
 ```
+
+※backendディレクトリ直下で実行して下さい
 
 ### 備考
 
