@@ -1,6 +1,7 @@
 version: '3'
 services:
   db:
+    container_name: db
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: password
@@ -9,8 +10,10 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     volumes:
       - ../docker/db:/var/lib/mysql
+      - ../docker/initdb.d:/docker-entrypoint-initdb.d
   backend:
     build: .
+    container_name: backend
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     volumes:
       - .:/myapp
@@ -22,6 +25,7 @@ services:
     tty: true
   frontend:
     image: node:16
+    container_name: frontend
     ports:
       - '3001:3001'
     working_dir: /frontend
