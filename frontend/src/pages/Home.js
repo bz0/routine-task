@@ -8,7 +8,8 @@ import {
   Input,Button,
   InputGroup,
   InputLeftElement,
-  Text
+  Text,
+  Alert,AlertIcon
 } from '@chakra-ui/react';
 import { IoMdSearch } from 'react-icons/io';
 import { TaskRow } from '../components/TaskRow'
@@ -78,9 +79,11 @@ export const Home = () => {
             </Box>
           </Flex>
           <List mt={2}>
-            {tasks.length > 0 && tasks.map((task, index) =>
+            {tasks.length > 0 ? tasks.map((task, index) =>
               <TaskRow task={task} getList={getList} index={index} key={task.id} />
-            )}
+            ) :   <Alert status='error' mt='10' variant='left-accent'>
+                    <AlertIcon /> タスクがありません。タスクを追加して下さい
+                  </Alert>}
           </List>
         </>
     )
