@@ -33,7 +33,7 @@ SLACK_WEB_HOOK_URL='WebhookURL'
 $ make build
 ```
 
-下記URLで画面を開けます。
+下記URLで画面を開けます。（上記コマンド実行後少し待って下さい）
 
 ```
 http://localhost:3001
