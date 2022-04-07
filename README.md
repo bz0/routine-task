@@ -59,7 +59,7 @@ $ docker-compose run backend rake routine_task_notification:random
 ### テスト
 
 ```
-$ docker-compose run backend rspec spec
+$ docker-compose run backend rspec spec --format documentation
 ```
 
 ※backendディレクトリ直下で実行して下さい
