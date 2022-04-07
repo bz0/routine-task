@@ -37,6 +37,9 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-node-
+      
+      - name: .env
+        run: cp .env.sample .env
 
       - name: Bundler and gem install
         run: |
@@ -47,6 +50,8 @@ jobs:
           cp config/database.yml.ci config/database.yml
           bundle exec rails db:create RAILS_ENV=test
           bundle exec rails db:migrate RAILS_ENV=test
+
+      
 
       - name: Run rspec
         run: bundle exec rspec spec --format documentation
