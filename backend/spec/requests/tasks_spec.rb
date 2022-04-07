@@ -126,6 +126,25 @@ RSpec.describe "Tasks", type: :request do
       end
     end
 
+    context "論理削除したタスクが存在する" do
+      before do
+        create(:task, name: "台所の掃除", deleted_at: Time.now)
+        create(:task, name: "掃除用品の補充")
+      end
+
+      example "論理削除されたタスクは返さない" do
+        get tasks_path, params: {}, headers: headers
+        expect(response).to have_http_status(TasksController::HTTP_STATUS_200)
+        json = JSON.parse(response.body, { :symbolize_names => true })
+        
+        data = json[:data]
+        expect(json[:count]).to eq 1
+        expect(data.length).to eq 1
+        expect(data[0][:name]).to eq "掃除用品の補充"
+        expect(json[:status]).to eq TasksController::STATUS_SUCCESS
+      end
+    end
+
     context "検索ワードに「掃除」を指定" do
       before do
         create(:task, name: "台所の掃除")
