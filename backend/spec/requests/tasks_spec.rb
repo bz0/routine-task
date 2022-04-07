@@ -256,7 +256,7 @@ RSpec.describe "Tasks", type: :request do
         create(:task, name: 'test')
       end
 
-      example "タスクが削除される" do
+      example "タスクが論理削除される" do
         task = Task.find_by(name: 'test')
         delete task_path(task), params: { id: task[:id] }, headers: headers
         expect(response).to have_http_status(TasksController::HTTP_STATUS_200)
