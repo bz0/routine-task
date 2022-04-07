@@ -170,6 +170,36 @@ RSpec.describe "Tasks", type: :request do
       end
     end
 
+    context "論理削除されているが更新対象のタスクは存在する" do
+      before do
+        create(:task, name: before_update_task, deleted_at: Time.now)
+      end
+
+      example "更新されずエラー情報が返る" do
+        task = Task.find_by(name: before_update_task)
+        patch task_path(task), params: { id: task[:id], name: after_update_task }, headers: headers
+        expect(response).to have_http_status(TasksController::HTTP_STATUS_200)
+
+        json = JSON.parse(response.body, { :symbolize_names => true })
+        message = json[:error][:message]
+
+        expect(json[:status]).to eq TasksController::STATUS_ERROR
+        expect(message).to eq TasksController::TASK_EXIST_MESSAGE
+      end
+    end
+
+    context "更新対象のタスクが存在しない" do
+      example "更新されずエラー情報が返る" do
+        patch task_path(100), params: { id: 100, name: after_update_task }, headers: headers
+        expect(response).to have_http_status(TasksController::HTTP_STATUS_200)
+
+        json = JSON.parse(response.body, { :symbolize_names => true })
+
+        expect(json[:status]).to eq TasksController::STATUS_ERROR
+        expect(json[:error][:message]).to eq TasksController::TASK_EXIST_MESSAGE
+      end
+    end
+
     context "更新対象のタスクが存在しない" do
       example "更新されずエラー情報が返る" do
         patch task_path(100), params: { id: 100, name: after_update_task }, headers: headers
@@ -192,6 +222,43 @@ RSpec.describe "Tasks", type: :request do
         allow_any_instance_of(Task).to receive(:save!).and_return(false)
         patch task_path(task), params: { id: task[:id], name: after_update_task }, headers: headers
 
+        expect(response).to have_http_status(TasksController::HTTP_STATUS_200)
+
+        json = JSON.parse(response.body, { :symbolize_names => true })
+        expect(json[:status]).to eq TasksController::STATUS_ERROR
+        expect(json[:error][:message]).to eq TasksController::FAILED_UPDATE_TASK_MESSAGE
+      end
+    end
+  end
+
+  describe "DELETE /tasks 削除処理" do
+    context "削除対象のタスクが存在する" do
+      before do
+        create(:task, name: 'test')
+      end
+
+      example "タスクが削除される" do
+        task = Task.find_by(name: 'test')
+        delete task_path(task), params: { id: task[:id] }, headers: headers
+        expect(response).to have_http_status(TasksController::HTTP_STATUS_200)
+
+        json = JSON.parse(response.body, { :symbolize_names => true })
+        expect(json[:status]).to eq TasksController::STATUS_SUCCESS
+
+        # 論理削除されていることを確認する
+        task_deleted = Task.find(task[:id])
+        expect(task_deleted[:deleted_at]).not_to eq nil
+      end
+    end
+
+    context "削除対象のタスクが論理削除済" do
+      before do
+        create(:task, name: 'test', deleted_at: Time.now)
+      end
+
+      example "削除されずエラー情報が返る" do
+        task = Task.find_by(name: 'test')
+        delete task_path(task), params: { id: task[:id] }, headers: headers
         expect(response).to have_http_status(TasksController::HTTP_STATUS_200)
 
         json = JSON.parse(response.body, { :symbolize_names => true })
