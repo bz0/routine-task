@@ -30,7 +30,8 @@ class TasksController < ApplicationController
     begin
       params.require(:name)
 
-      task = Task.find_by(name: params[:name])
+      task = Task.enabled
+                 .find_by(name: params[:name])
       unless task.nil?
         raise StandardError, ALREADY_REGISTERED_TASK_MESSAGE
       end
@@ -59,7 +60,7 @@ class TasksController < ApplicationController
     begin
       params.require(:id)
       params.require(:name)
-      task = Task.find_by(id: params[:id])
+      task = Task.enabled.find_by(id: params[:id])
 
       if task.nil? # レコードが存在するかチェックする
         raise StandardError, TASK_EXIST_MESSAGE
@@ -86,7 +87,7 @@ class TasksController < ApplicationController
   def destroy
     begin
       params.require(:id)
-      task = Task.find(params[:id])
+      task = Task.enabled.find(params[:id])
 
       if task.nil?
         raise StandardError, TASK_EXIST_MESSAGE

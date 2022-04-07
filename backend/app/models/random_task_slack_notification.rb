@@ -13,6 +13,7 @@ class RandomTaskSlackNotification
       end
 
       task = random_task
+
       if task.nil?
         raise StandardError, EXIST_TASK_MESSAGE
       end
@@ -29,6 +30,6 @@ class RandomTaskSlackNotification
   # タスクからランダムに１件取得
   # @return [Task]
   def random_task
-    Task.offset(rand(Task.count)).first
+    Task.enabled.offset(rand(Task.enabled.count)).first
   end
 end
