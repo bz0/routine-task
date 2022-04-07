@@ -51,7 +51,8 @@ jobs:
           bundle exec rails db:create RAILS_ENV=test
           bundle exec rails db:migrate RAILS_ENV=test
 
-      
+      - name: Run rubocop-airbnb
+        run: bundle exec rubocop --require rubocop-airbnb
 
       - name: Run rspec
         run: bundle exec rspec spec --format documentation
