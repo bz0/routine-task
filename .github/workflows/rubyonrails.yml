@@ -10,13 +10,21 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+orbs:
+  ruby: circleci/ruby@3.0.3
 jobs:
   build:
     docker:
       - image: cimg/ruby:3.0.3 # ステップが実行されるプライマリコンテナ
-      - image: cimg/mysql:8.0
         environment:
+          DB_HOST: 127.0.0.1
+          RAILS_ENV: test
+      - image: cimg/mysql:8.0
+        command: --default-authentication-plugin=mysql_native_password
+        environment:
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
           MYSQL_ROOT_PASSWORD: password
+          MYSQL_ROOT_HOST: '%'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
