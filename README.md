@@ -30,7 +30,7 @@ SLACK_WEB_HOOK_URL='WebhookURL'
 下記コマンドをルートディレクトリから実行しDB作成・docker環境構築・railsサーバ立ち上げを行います。
 
 ```
-$ cd backend && make build
+$ make build
 ```
 
 下記URLで画面を開けます。
