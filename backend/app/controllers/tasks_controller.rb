@@ -87,7 +87,7 @@ class TasksController < ApplicationController
   def destroy
     begin
       params.require(:id)
-      task = Task.enabled.find(params[:id])
+      task = Task.enabled.find_by(id: params[:id])
 
       if task.nil?
         raise StandardError, TASK_EXIST_MESSAGE

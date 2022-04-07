@@ -251,6 +251,28 @@ RSpec.describe "Tasks", type: :request do
       end
     end
 
+    context "idパラメータの値が空" do
+      example "タスク削除せずにメッセージを返す" do
+        post tasks_path, params: { "id" => "" }, headers: headers
+        expect(response).to have_http_status(TasksController::HTTP_STATUS_200)
+
+        json = JSON.parse(response.body, { :symbolize_names => true })
+        expect(json[:status]).to eq TasksController::STATUS_ERROR
+        expect(json[:error][:message]).to eq TasksController::BAD_REQUEST_MESSAGE
+      end
+    end
+
+    context "idパラメータがない" do
+      example "タスク削除せずにメッセージを返す" do
+        post tasks_path, params: { "id" => "" }, headers: headers
+        expect(response).to have_http_status(TasksController::HTTP_STATUS_200)
+
+        json = JSON.parse(response.body, { :symbolize_names => true })
+        expect(json[:status]).to eq TasksController::STATUS_ERROR
+        expect(json[:error][:message]).to eq TasksController::BAD_REQUEST_MESSAGE
+      end
+    end
+
     context "削除対象のタスクが論理削除済" do
       before do
         create(:task, name: 'test', deleted_at: Time.now)
@@ -263,7 +285,7 @@ RSpec.describe "Tasks", type: :request do
 
         json = JSON.parse(response.body, { :symbolize_names => true })
         expect(json[:status]).to eq TasksController::STATUS_ERROR
-        expect(json[:error][:message]).to eq TasksController::FAILED_UPDATE_TASK_MESSAGE
+        expect(json[:error][:message]).to eq TasksController::TASK_EXIST_MESSAGE
       end
     end
   end
