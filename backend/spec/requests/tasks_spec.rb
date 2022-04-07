@@ -40,6 +40,24 @@ RSpec.describe "Tasks", type: :request do
       end
     end
 
+    context "論理削除されているが既に同じタスク名が存在する" do
+      before do
+        create(:task, name: 'test', deleted_at: Time.now)
+      end
+
+      example "タスクを1件登録" do
+        post tasks_path, params: { "name" => "test" }, headers: headers
+        expect(response).to have_http_status(TasksController::HTTP_STATUS_200)
+        json = JSON.parse(response.body, { :symbolize_names => true })
+
+        expect(json[:status]).to eq TasksController::STATUS_SUCCESS
+
+        # 登録したデータが返ってきているか
+        expect(json[:data][:name]).to eq 'test'
+        expect(json[:data][:deleted_at]).to eq nil
+      end
+    end
+
     context "nameパラメータの値が空" do
       example "タスク登録せずにメッセージを返す" do
         post tasks_path, params: { "name" => "" }, headers: headers
