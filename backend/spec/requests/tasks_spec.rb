@@ -136,7 +136,7 @@ RSpec.describe "Tasks", type: :request do
         get tasks_path, params: {}, headers: headers
         expect(response).to have_http_status(TasksController::HTTP_STATUS_200)
         json = JSON.parse(response.body, { :symbolize_names => true })
-        
+
         data = json[:data]
         expect(json[:count]).to eq 1
         expect(data.length).to eq 1

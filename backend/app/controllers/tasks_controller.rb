@@ -31,8 +31,8 @@ class TasksController < ApplicationController
     begin
       params.require(:name)
 
-      task = Task.enabled
-                 .find_by(name: params[:name])
+      task = Task.enabled.
+        find_by(name: params[:name])
       unless task.nil?
         raise StandardError, ALREADY_REGISTERED_TASK_MESSAGE
       end
