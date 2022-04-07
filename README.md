@@ -3,7 +3,7 @@
 ## ローカル環境構築手順
 
 
-### 1.slackへの通知設定
+### 1.slack通知設定
 
 #### 1-1.slackのWebhookURLを取得する
 
@@ -11,14 +11,13 @@ Incoming Webhook インテグレーションの追加を行います。
 下記リンクに飛び、通知したいチャンネルを選択して下さい。  
 https://slack.com/services/new/incoming-webhook
 
-表示されたWebhookURLを.envに設定します。  
+表示されたWebhookURLを.envに設定します。
 
-#### 1-2.環境設定ファイルのテンプレートをコピーする
+#### 1-2.環境変数ファイルのテンプレートをコピーする
 
 ```
 $ cp .env.sample .env
 ```
-※backendディレクトリ直下で実行して下さい
 
 #### 1-3.WebhookURLを.envに記載する
 
@@ -43,6 +42,7 @@ http://localhost:3001
 - バックエンド(API)：http://localhost:3000
 - フロントエンド：http://localhost:3001
 
+## 動作確認
 
 ### タスクのランダム通知
 
@@ -64,7 +64,7 @@ $ docker-compose run backend rspec spec
 
 ※backendディレクトリ直下で実行して下さい
 
-### 備考
+## 備考
 
 - .env.sampleにAPI_TOKENを直に貼ってます（実プロジェクトだとやらないですが、今回固定トークンな為そのまま貼ってます）
 - 初期データとしてタスクが10件入ります
