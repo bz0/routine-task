@@ -16,7 +16,7 @@ https://slack.com/services/new/incoming-webhook
 #### 1-2.環境変数ファイルのテンプレートをコピーする
 
 ```
-$ cp .env.sample .env
+$ cd backend && cp .env.sample .env
 ```
 
 #### 1-3.WebhookURLを.envに記載する
