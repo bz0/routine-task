@@ -39,6 +39,7 @@ jobs:
 
       - name: Bundler and gem install
         run: |
+          ls -l
           bundle install
 
       - name: Database create and migrate
