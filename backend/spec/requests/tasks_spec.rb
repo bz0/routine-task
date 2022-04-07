@@ -59,7 +59,7 @@ RSpec.describe "Tasks", type: :request do
     end
 
     context "nameパラメータの値が空" do
-      example "タスク登録せずにメッセージを返す" do
+      example "タスク登録せずにエラー情報を返す" do
         post tasks_path, params: { "name" => "" }, headers: headers
         expect(response).to have_http_status(TasksController::HTTP_STATUS_200)
 
