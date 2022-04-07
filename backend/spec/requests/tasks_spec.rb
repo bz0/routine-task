@@ -80,7 +80,7 @@ RSpec.describe "Tasks", type: :request do
       end
     end
 
-    context "DB登録を失敗させる" do
+    context "save!を失敗させる" do
       it "タスク登録せずにエラー情報を返す" do
         allow_any_instance_of(Task).to receive(:save!).and_return(false)
 
@@ -231,7 +231,7 @@ RSpec.describe "Tasks", type: :request do
       end
     end
 
-    context "DB登録を失敗させる" do
+    context "save!を失敗させる" do
       before do
         create(:task, name: before_update_task)
       end
@@ -271,7 +271,7 @@ RSpec.describe "Tasks", type: :request do
     end
 
     context "idパラメータの値が空" do
-      example "タスク削除せずにメッセージを返す" do
+      example "論理削除せずにメッセージを返す" do
         post tasks_path, params: { "id" => "" }, headers: headers
         expect(response).to have_http_status(TasksController::HTTP_STATUS_200)
 
@@ -282,7 +282,7 @@ RSpec.describe "Tasks", type: :request do
     end
 
     context "idパラメータがない" do
-      example "タスク削除せずにメッセージを返す" do
+      example "論理削除せずにメッセージを返す" do
         post tasks_path, params: { "id" => "" }, headers: headers
         expect(response).to have_http_status(TasksController::HTTP_STATUS_200)
 
@@ -297,7 +297,7 @@ RSpec.describe "Tasks", type: :request do
         create(:task, name: 'test', deleted_at: Time.now)
       end
 
-      example "削除されずエラー情報が返る" do
+      example "論理削除せずにエラー情報が返る" do
         task = Task.find_by(name: 'test')
         delete task_path(task), params: { id: task[:id] }, headers: headers
         expect(response).to have_http_status(TasksController::HTTP_STATUS_200)
@@ -305,6 +305,24 @@ RSpec.describe "Tasks", type: :request do
         json = JSON.parse(response.body, { :symbolize_names => true })
         expect(json[:status]).to eq TasksController::STATUS_ERROR
         expect(json[:error][:message]).to eq TasksController::TASK_EXIST_MESSAGE
+      end
+    end
+
+    context "soft_delete!を失敗させる" do
+      before do
+        create(:task, name: 'test')
+      end
+
+      example "論理削除せずにエラー情報が返る" do
+        task = Task.find_by(name: 'test')
+        allow_any_instance_of(Task).to receive(:soft_delete!).and_return(false)
+        delete task_path(task), params: { id: task[:id] }, headers: headers
+
+        expect(response).to have_http_status(TasksController::HTTP_STATUS_200)
+
+        json = JSON.parse(response.body, { :symbolize_names => true })
+        expect(json[:status]).to eq TasksController::STATUS_ERROR
+        expect(json[:error][:message]).to eq TasksController::FAILED_DELETE_TASK_MESSAGE
       end
     end
   end

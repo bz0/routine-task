@@ -7,6 +7,7 @@ class TasksController < ApplicationController
   FAILED_UPDATE_TASK_MESSAGE      = "タスクの更新に失敗しました".freeze
   BAD_REQUEST_MESSAGE             = "リクエストが不正です".freeze
   FAILED_REGISTER_TASK_MESSAGE    = "タスクの登録に失敗しました".freeze
+  FAILED_DELETE_TASK_MESSAGE      = "タスクの削除に失敗しました".freeze
   ALREADY_REGISTERED_TASK_MESSAGE = "既に登録されているタスクです".freeze
 
   def index
@@ -93,7 +94,10 @@ class TasksController < ApplicationController
         raise StandardError, TASK_EXIST_MESSAGE
       end
 
-      task.soft_delete!
+      unless task.soft_delete!
+        raise StandardError, FAILED_DELETE_TASK_MESSAGE
+      end
+
       json = { status: STATUS_SUCCESS }
     rescue ActionController::ParameterMissing
       # 未入力の場合
