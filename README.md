@@ -2,7 +2,31 @@
 
 ## ローカル環境構築手順
 
-### 1.ローカル環境構築
+
+### 1.slackへの通知設定
+
+#### 1-1.slackのWebhookURLを取得する
+
+Incoming Webhook インテグレーションの追加を行います。  
+下記リンクに飛び、通知したいチャンネルを選択して下さい。  
+https://slack.com/services/new/incoming-webhook
+
+表示されたWebhookURLを.envに設定します。  
+
+#### 1-2.環境設定ファイルのテンプレートをコピーする
+
+```
+$ cp .env.sample .env
+```
+※backendディレクトリ直下で実行して下さい
+
+#### 1-3.WebhookURLを.envに記載する
+
+```.env
+SLACK_WEB_HOOK_URL='WebhookURL'
+```
+
+### 2.ローカル環境構築
 
 下記コマンドをルートディレクトリから実行しDB作成・docker環境構築・railsサーバ立ち上げを行います。
 
@@ -19,30 +43,8 @@ http://localhost:3001
 - バックエンド(API)：http://localhost:3000
 - フロントエンド：http://localhost:3001
 
-### 2.slackへの通知設定
 
-#### 2-1.slackのWebhookURLを取得する
-
-Incoming Webhook インテグレーションの追加を行います。  
-下記リンクに飛び、通知したいチャンネルを選択して下さい。  
-https://slack.com/services/new/incoming-webhook
-
-表示されたWebhookURLを.envに設定します。  
-
-#### 2-2.環境設定ファイルのテンプレートをコピーする
-
-```
-$ cp .env.sample .env
-```
-※backendディレクトリ直下で実行して下さい
-
-#### 2-3.WebhookURLを.envに記載する
-
-```.env
-SLACK_WEB_HOOK_URL='WebhookURL'
-```
-
-#### 2-4.タスクのランダム通知
+### タスクのランダム通知
 
 下記実行すると通知されます。  
 
