@@ -54,5 +54,5 @@ jobs:
       - name: Run rubocop-airbnb
         run: bundle exec rubocop --require rubocop-airbnb
 
-      - name: Run rspec
-        run: bundle exec rspec spec --format documentation
+      - name: Run rspec(乱数の固定化の為「--seed 1」をつけています)
+        run: bundle exec rspec spec --seed 1 --format documentation
