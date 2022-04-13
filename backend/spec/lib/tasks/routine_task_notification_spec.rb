@@ -15,6 +15,7 @@ describe 'rake task routine_task_notification_spec' do
 
   describe 'routine_task_notification:random' do
     let(:task) { 'routine_task_notification:random' }
+
     it 'is succeed.' do
       expect(@rake[task].invoke).to be_truthy
     end
