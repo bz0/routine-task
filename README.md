@@ -27,7 +27,7 @@ SLACK_WEB_HOOK_URL='WebhookURL'
 
 ### 2.ローカル環境構築
 
-下記コマンドをルートディレクトリから実行しDB作成・docker環境構築・railsサーバ立ち上げを行います。
+下記コマンドを実行しDB作成・docker環境構築・railsサーバ立ち上げを行います。
 
 ```
 $ make build
@@ -63,6 +63,8 @@ $ docker-compose run backend rspec spec --format documentation
 ```
 
 ※backendディレクトリ直下で実行して下さい
+
+
 
 ## 備考
 
