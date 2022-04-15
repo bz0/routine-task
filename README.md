@@ -64,7 +64,7 @@ $ docker-compose run backend rspec spec --format documentation
 
 ※backendディレクトリ直下で実行して下さい
 
-### ChakraUI実装
+## ChakraUI実装
 
 ChakraUIの実装は、大雑把なレイアウトを専用のビルダーツールでテンプレートを作ると早かったです。  
 https://openchakra.app/
