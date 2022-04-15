@@ -14,7 +14,7 @@ class SlackIncomingWebhook
     begin
       @client.ping message
       status = STATUS_SUCCESS
-    rescue Slack::Notifier::APIError => e
+    rescue Slack::Notifier::APIError
       status = STATUS_ERROR
     end
 

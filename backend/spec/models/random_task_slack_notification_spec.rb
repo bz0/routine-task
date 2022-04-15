@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe RandomTaskSlackNotification do
-  describe 'slack通知のテスト' do
+  describe 'ランダムのテスト' do
     context 'ランダム(seedを指定する為返り値は固定(rspec spec --seed 1))' do
       before do
         create(:task, name: 'test1')
@@ -14,7 +14,9 @@ RSpec.describe RandomTaskSlackNotification do
         expect(subject.random_task.name).to eq "test2"
       end
     end
+  end
 
+  describe "slack通知" do
     context '#exec' do
       example 'slack通知が成功すると「OK」が返る' do
         random_task_slack_notification = described_class.new
