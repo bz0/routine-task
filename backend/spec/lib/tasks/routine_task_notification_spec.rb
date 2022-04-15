@@ -13,6 +13,8 @@ describe 'rake task routine_task_notification_spec' do
   end
 
   it 'is succeed.' do
+    slack_incoming_webhook = SlackIncomingWebhook.new('test', ':sunglasses:')
+    allow(slack_incoming_webhook).to receive(:exec).and_return("OK")
     expect(@rake[task].invoke).to be_truthy
   end
 end
